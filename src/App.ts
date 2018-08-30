@@ -17,7 +17,7 @@ class App {
     // DB settings
   }
 
-  public start(port: number): void {
+  public start(port: number | string): void {
     console.log(chalk.bgCyan(" LOADING ") + chalk.cyan(` Please Wait ... `));
     this.init();
     // DB connect
