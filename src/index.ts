@@ -1,6 +1,6 @@
 // For Dotenv
 import dotenv from "dotenv";
-dotenv.load();
+dotenv.config();
 
 import App from "./App";
 
