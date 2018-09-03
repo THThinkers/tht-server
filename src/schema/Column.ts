@@ -1,6 +1,8 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose from 'mongoose';
 
-const ColumnSchema: Schema = new Schema({
+const { Schema } = mongoose;
+
+const ColumnSchema = new Schema({
   author: { type: Schema.Types.ObjectId, ref: 'User' },
   nextAuthor: { type: Schema.Types.ObjectId, ref: 'User' },
   columnDocument: String,

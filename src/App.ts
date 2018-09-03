@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import User from './schema/User';
 
 // Server Interface
 export interface IServerSettings {
@@ -35,6 +36,8 @@ class App {
         dburl,
         { useNewUrlParser: true },
       );
+      const newUser = new User({ name: 'TESTNAME' });
+      newUser.save();
       console.log(
         chalk.bgBlue(' DATABASE ') + chalk.blue(' DB Connection Success '),
       );
@@ -61,7 +64,7 @@ class App {
         (): void => {
           console.log(
             chalk.bgGreen(' SUCCESS ') +
-              chalk.green(` Listening On Port ${port}`),
+            chalk.green(` Listening On Port ${port}`),
           );
         },
       );

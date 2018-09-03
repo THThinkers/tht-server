@@ -1,6 +1,8 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose from 'mongoose';
 
-const AcademyEvent: Schema = new Schema({
+const { Schema } = mongoose;
+
+const AcademyEvent = new Schema({
   name: String,
   date: Date,
   description: String,

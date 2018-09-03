@@ -1,6 +1,9 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose from 'mongoose';
 
-const UserSchema: Schema = new Schema({
+const { Schema } = mongoose;
+// Schema는 destructuring 하고 model은 안하는 이유.
+// model은 내부에서 this를 쓰기 떄문에 destructuring하면 binding이 안된다.
+const UserSchema = new Schema({
   name: String,
   password: String,
   isAdmin: Boolean, // 학회장 권한 설정

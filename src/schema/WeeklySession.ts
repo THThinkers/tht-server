@@ -1,6 +1,8 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose from 'mongoose';
 
-const WeeklySession: Schema = new Schema({
+const { Schema } = mongoose;
+
+const WeeklySession = new Schema({
   author: { type: Schema.Types.ObjectId, ref: 'User' },
   // Team, Thread관련 좀 더 논의 필요
 });
