@@ -1,7 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
 const UserSchema: Schema = new Schema({
-  id: String,
   name: String,
   password: String,
   isAdmin: Boolean, // 학회장 권한 설정
@@ -14,6 +13,7 @@ const UserSchema: Schema = new Schema({
   joind: Date,
   ended: Date,
   major: String, // 전공
+  studentId: { type: Number, min: 0, max: 99 }, // 학번년도
   /*
     사용자 선호 태그
     실제로 스키마가 저장되는 건 아니고 _id가 저장되고 불러올때는 몽고디비의 $lookup을 통해서 가져온다함.
@@ -29,7 +29,6 @@ const UserSchema: Schema = new Schema({
   /* ------------------------- */
 
   createdAt: Date,
-  updatedAt: Date,
 });
 
 export default mongoose.model('User', UserSchema);
