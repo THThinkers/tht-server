@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
 import mongoose from 'mongoose';
-import User from './schema/User';
+import routes from './routes';
 
 // Server Interface
 export interface IServerSettings {
@@ -26,6 +26,8 @@ class App {
     this.app.use(cors());
     // 로그 기록용
     this.app.use(morgan('dev'));
+    // REST Api 라우팅
+    this.app.use('/api', routes);
   }
 
   private async connectDB(dburl: string): Promise<void | Error> {
@@ -36,8 +38,6 @@ class App {
         dburl,
         { useNewUrlParser: true },
       );
-      const newUser = new User({ name: 'TESTNAME' });
-      newUser.save();
       console.log(
         chalk.bgBlue(' DATABASE ') + chalk.blue(' DB Connection Success '),
       );
@@ -64,7 +64,7 @@ class App {
         (): void => {
           console.log(
             chalk.bgGreen(' SUCCESS ') +
-            chalk.green(` Listening On Port ${port}`),
+              chalk.green(` Listening On Port ${port}`),
           );
         },
       );
