@@ -12,4 +12,6 @@ const serverSettings: IServerSettings = {
 };
 const app: App = new App();
 
-app.start(serverSettings);
+app
+  .start(serverSettings)
+  .then(() => app.app.get('/', (req, res) => res.sendfile('./index.html')));

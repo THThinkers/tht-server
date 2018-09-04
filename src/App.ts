@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import passport from './passport';
 import routes from './routes';
 
 // Server Interface
@@ -26,6 +27,8 @@ class App {
     this.app.use(cors());
     // 로그 기록용
     this.app.use(morgan('dev'));
+    // Passport
+    this.app.use(passport.initialize());
     // REST Api 라우팅
     this.app.use('/api', routes);
   }
