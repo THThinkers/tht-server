@@ -8,7 +8,7 @@ const router = express.Router();
 router.get(
   '/google',
   passport.authenticate('google', {
-    scope: ['https://www.googleapis.com/auth/plus.login'],
+    scope: ['profile', 'email'],
   }),
 );
 // router.get('/kakao', controller.kakaoLogin);
@@ -18,4 +18,5 @@ router.get(
   controller.redirected,
 );
 
+router.get('/profile', controller.getProfile);
 export default router;

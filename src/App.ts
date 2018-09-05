@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import session from 'express-session';
 import passport from './passport';
 import routes from './routes';
 
@@ -27,8 +28,15 @@ class App {
     this.app.use(cors());
     // 로그 기록용
     this.app.use(morgan('dev'));
+    // 세션 저장 (나중에 설정 필요)
+    this.app.use(
+      session({
+        secret: 'devsecret',
+      }),
+    );
     // Passport
     this.app.use(passport.initialize());
+    this.app.use(passport.session());
     // REST Api 라우팅
     this.app.use('/api', routes);
   }

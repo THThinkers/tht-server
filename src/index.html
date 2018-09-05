@@ -9,18 +9,8 @@
 </head>
 
 <body>
-    <script>
-        function login() {
-            var xhttp = new XMLHttpRequest();
-            xhttp.open('POST',
-                '/api/auth/kakao', true);
-            xhttp.send(null);
-        }
-    </script>
     <div>
-        <a href="https://kauth.kakao.com/oauth/authorize?client_id=62a0c42953c577f681f7d4236b9373f0&redirect_uri=http://localhost:4000/api/auth/redirected&response_type=code">login</a>
-        <button onclick="login()">카카오 로그인</button>
-        <div id="status" />
+        <a href="/api/auth/google">Google login</a>
     </div>
 </body>
 
