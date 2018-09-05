@@ -28,13 +28,13 @@ class App {
     this.app.use(cors());
     // 로그 기록용
     this.app.use(morgan('dev'));
-    // 세션 저장 (나중에 설정 필요)
+    // express 에서 session 사용하기 위한 설정 - 세부 설정 필요.
     this.app.use(
       session({
-        secret: 'devsecret',
+        secret: process.env.SESSION_KEY,
       }),
     );
-    // Passport
+    // Passport 설정 - Passport session은 passport/index.ts 파일 커맨트 참고.
     this.app.use(passport.initialize());
     this.app.use(passport.session());
     // REST Api 라우팅

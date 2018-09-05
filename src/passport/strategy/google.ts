@@ -1,23 +1,30 @@
 import GoogleStrategy from 'passport-google-oauth';
-
+import User from '../../schema/User';
 const { OAuth2Strategy } = GoogleStrategy;
-const clientID =
-  '246696659137-o84por9sn1qmudb1oiqjpbkfgj8li4u3.apps.googleusercontent.com';
-const clientSecret = 'Ufus1zDLQFsBqUhRCDBLpXo-';
-
+const {
+  GAUTH_CLIENT_ID,
+  GAUTH_CLIENT_SECRET,
+  GAUTH_REDIRECT_URL,
+} = process.env;
+interface IProfile {
+  id?: String;
+  email?: String;
+}
 const googleStrategy = new OAuth2Strategy(
   {
-    clientID,
-    clientSecret,
-    callbackURL: 'http://localhost:4000/api/auth/redirected',
+    clientID: GAUTH_CLIENT_ID,
+    clientSecret: GAUTH_CLIENT_SECRET,
+    callbackURL: GAUTH_REDIRECT_URL,
   },
-  function auth(accessToken, refreshToken, profile, done) {
-    const { id, emails } = profile;
-    const fakeUser = {
-      id: id,
-      email: emails[0] ? emails[0].value : null,
+  // token 처리는 나중에 생각해봅시다.
+  function auth(accessToken, refreshToken, profile: IProfile, done) {
+    const query = { googleId: profile.id };
+    const callback = (err, user) => {
+      if (err) return done(null);
+      console.log(user);
+      return done(null, user);
     };
-    return done('', fakeUser);
+    User.findOneOrCreate(query, { _id: 1 }, callback);
   },
 );
 

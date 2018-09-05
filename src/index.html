@@ -9,8 +9,35 @@
 </head>
 
 <body>
+    <script>
+        const url = '/api/auth/profile';
+        window.onload = (e) => {
+            const xhttp = new XMLHttpRequest();
+            xhttp.open('GET', '/api/auth/profile', true);
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    const {
+                        user
+                    } = JSON.parse(this.response);
+                    Object.keys(user).map(key => {
+                        const el = document.getElementById(key);
+                        el ? el.innerHTML = user[key] : null;
+                    });
+                }
+            }
+            xhttp.send();
+        }
+    </script>
     <div>
-        <a href="/api/auth/google">Google login</a>
+        <a href="/api/auth/google">
+            Sign in with GOOGLE
+        </a>
+        <div id="profile">
+            <h2>Your Profile</h2>
+            _id: <span id="_id"></span>
+            googleId: <span id="googleId"></span>
+            자기소개: <span id="description"></span>
+        </div>
     </div>
 </body>
 
