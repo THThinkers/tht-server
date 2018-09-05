@@ -5,7 +5,8 @@ import User from '../schema/User';
 passport.use(googleStrategy);
 interface IUser {
   _id: string;
-  // session으로 넣어줄 유저 정보...
+  // gauth strategy에서 받는 유저 정보
+  // db model을 따와도 될듯 함.
 }
 // passport session 사용시 필요한 설정 - session에 넣어줄 값을 설정해줌.
 // 아래와 같은 경우 req.session.passport.user = { id: user.id }
