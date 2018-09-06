@@ -18,8 +18,11 @@
   },
   "homepage": "https://github.com/THThinkers/tht-server#readme",
   "dependencies": {
+    "@types/body-parser": "^1.17.0",
+    "@types/express-session": "^1.15.10",
     "@types/passport": "^0.4.6",
     "@types/request": "^2.47.1",
+    "body-parser": "^1.18.3",
     "chalk": "^2.4.1",
     "cors": "^2.8.4",
     "dotenv": "^6.0.0",

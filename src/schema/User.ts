@@ -65,6 +65,9 @@ UserSchema.statics.findOneOrCreate = function findOneOrCreate(query, ...args) {
     if (err) {
       return callback(err, null);
     }
+    if (user) {
+      return callback(null, user);
+    }
     self.create(query, (err, user) => {
       return callback(err, user);
     });

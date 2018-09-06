@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
 import session from 'express-session';
 import passport from './passport';
 import routes from './routes';
@@ -28,10 +29,12 @@ class App {
     this.app.use(cors());
     // 로그 기록용
     this.app.use(morgan('dev'));
+    // body 사용
+    this.app.use(bodyParser());
     // express 에서 session 사용하기 위한 설정 - 세부 설정 필요.
     this.app.use(
       session({
-        secret: process.env.SESSION_KEY,
+        secret: process.env.SESSION_KEY!,
       }),
     );
     // Passport 설정 - Passport session은 passport/index.ts 파일 커맨트 참고.

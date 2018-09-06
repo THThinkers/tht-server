@@ -6,11 +6,12 @@ import * as controller from './controller';
 const router = express.Router();
 
 router.get(
-  '/google',
+  '/oauth/google',
   passport.authenticate('google', {
     scope: ['profile', 'email'],
   }),
 );
+router.put('/oauth/profile', controller.putProfile);
 // router.get('/kakao', controller.kakaoLogin);
 router.get(
   '/redirected',
@@ -19,4 +20,6 @@ router.get(
 );
 
 router.get('/profile', controller.getProfile);
+router.get('/logout', controller.logout);
+
 export default router;
