@@ -14,9 +14,9 @@ router.get(
 router.put('/oauth/profile', controller.putProfile);
 // router.get('/kakao', controller.kakaoLogin);
 router.get(
-  '/redirected',
+  '/oauth/callback',
   passport.authenticate('google', { failureRedirect: '/login' }),
-  controller.redirected,
+  controller.callback,
 );
 
 router.get('/profile', controller.getProfile);
