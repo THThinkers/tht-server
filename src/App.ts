@@ -4,7 +4,10 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
 import mongoose from 'mongoose';
-import User from './schema/User';
+import bodyParser from 'body-parser';
+import session from 'express-session';
+import passport from './passport';
+import routes from './routes';
 
 // Server Interface
 export interface IServerSettings {
@@ -26,6 +29,19 @@ class App {
     this.app.use(cors());
     // 로그 기록용
     this.app.use(morgan('dev'));
+    // body 사용
+    this.app.use(bodyParser());
+    // express 에서 session 사용하기 위한 설정 - 세부 설정 필요.
+    this.app.use(
+      session({
+        secret: process.env.SESSION_KEY!,
+      }),
+    );
+    // Passport 설정 - Passport session은 passport/index.ts 파일 커맨트 참고.
+    this.app.use(passport.initialize());
+    this.app.use(passport.session());
+    // REST Api 라우팅
+    this.app.use('/api', routes);
   }
 
   private async connectDB(dburl: string): Promise<void | Error> {
@@ -36,8 +52,6 @@ class App {
         dburl,
         { useNewUrlParser: true },
       );
-      const newUser = new User({ name: 'TESTNAME' });
-      newUser.save();
       console.log(
         chalk.bgBlue(' DATABASE ') + chalk.blue(' DB Connection Success '),
       );
@@ -64,7 +78,7 @@ class App {
         (): void => {
           console.log(
             chalk.bgGreen(' SUCCESS ') +
-            chalk.green(` Listening On Port ${port}`),
+              chalk.green(` Listening On Port ${port}`),
           );
         },
       );
