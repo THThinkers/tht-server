@@ -3,6 +3,4 @@ import Column from '../../schema/Column';
 
 const getColumn = (req: Request, res: Response) => {};
 
-const getColumnList = (req: Request, res: Response) => {
-  const Column;
-};
+const getColumnList = (req: Request, res: Response) => {};

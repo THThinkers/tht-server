@@ -1,4 +1,4 @@
-import mongoose, { Document, Model, Schema, MongooseDocument } from 'mongoose';
+import mongoose, { Document, Model } from 'mongoose';
 import Counter, { ICounter } from './Counter';
 import { IUser } from './User';
 
