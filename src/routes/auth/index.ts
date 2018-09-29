@@ -11,8 +11,10 @@ router.get(
     scope: ['profile', 'email'],
   }),
 );
+
 router.put('/oauth/profile', controller.putProfile);
 // router.get('/kakao', controller.kakaoLogin);
+
 router.get(
   '/oauth/callback',
   passport.authenticate('google', { failureRedirect: '/login' }),
