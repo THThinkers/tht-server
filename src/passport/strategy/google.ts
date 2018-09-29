@@ -7,8 +7,8 @@ const {
   GAUTH_REDIRECT_URL,
 } = process.env;
 interface IProfile {
-  id?: String;
-  email?: String;
+  id?: string;
+  email?: string;
 }
 const googleStrategy = new OAuth2Strategy(
   {

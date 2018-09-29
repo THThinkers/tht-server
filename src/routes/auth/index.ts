@@ -5,6 +5,8 @@ import * as controller from './controller';
 
 const router = express.Router();
 
+// oauth routing
+// api 한번 정리 필요!
 router.get(
   '/oauth/google',
   passport.authenticate('google', {
@@ -20,6 +22,10 @@ router.get(
   passport.authenticate('google', { failureRedirect: '/login' }),
   controller.callback,
 );
+router.put('/oauth/profile', controller.putProfile);
+// Kakao 로그인 테스트
+router.get('/oauth/kakao', controller.oauthKakao);
+router.get('/oauth/callback/kakao', controller.callbackKakao);
 
 router.get('/profile', controller.getProfile);
 router.get('/logout', controller.logout);
