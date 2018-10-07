@@ -20,7 +20,9 @@ const googleStrategy = new OAuth2Strategy(
   function auth(accessToken, refreshToken, profile: IProfile, done) {
     const query = { googleId: profile.id };
     const callback = (err, user) => {
-      if (err) return done(null);
+      if (err) {
+        return done(null);
+      }
       return done(null, user);
     };
     User.findOneOrCreate(query, { _id: 1 }, callback);

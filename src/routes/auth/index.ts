@@ -23,6 +23,7 @@ router.get(
   controller.callback,
 );
 router.put('/oauth/profile', controller.putProfile);
+
 // Kakao 로그인 테스트
 router.get('/oauth/kakao', controller.oauthKakao);
 router.get('/oauth/callback/kakao', controller.callbackKakao);

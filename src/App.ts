@@ -1,11 +1,11 @@
-import express, { Application } from 'express';
-import chalk from 'chalk';
-import morgan from 'morgan';
-import helmet from 'helmet';
-import cors from 'cors';
-import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
+import chalk from 'chalk';
+import cors from 'cors';
+import express, { Application } from 'express';
 import session from 'express-session';
+import helmet from 'helmet';
+import mongoose from 'mongoose';
+import morgan from 'morgan';
 import passport from './passport';
 import routes from './routes';
 
@@ -18,7 +18,31 @@ export interface IServerSettings {
 }
 
 class App {
-  app: Application = express();
+  public app: Application = express();
+
+  // 서버 실행하는 함수
+  public async start(settings: IServerSettings): Promise<void> {
+    const { port, dbUrl } = settings;
+    console.log(chalk.bgCyan(' LOADING ') + chalk.cyan(` Please Wait ... `));
+    try {
+      // 초기화
+      this.init();
+      // DB connect
+      await this.connectDB(dbUrl);
+      // Start The App
+      this.app.listen(
+        port,
+        (): void => {
+          console.log(
+            chalk.bgGreen(' SUCCESS ') +
+              chalk.green(` Listening On Port ${port}`),
+          );
+        },
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   // 앱 초기화. 미들웨어 추가
   private init(): void {
@@ -60,30 +84,6 @@ class App {
         chalk.bgRed('  ERROR  ') + chalk.red(' DB Connection Failed'),
       );
       return Promise.reject(err);
-    }
-  }
-
-  // 서버 실행하는 함수
-  public async start(settings: IServerSettings): Promise<void> {
-    const { port, dbUrl } = settings;
-    console.log(chalk.bgCyan(' LOADING ') + chalk.cyan(` Please Wait ... `));
-    try {
-      // 초기화
-      this.init();
-      // DB connect
-      await this.connectDB(dbUrl);
-      // Start The App
-      this.app.listen(
-        port,
-        (): void => {
-          console.log(
-            chalk.bgGreen(' SUCCESS ') +
-              chalk.green(` Listening On Port ${port}`),
-          );
-        },
-      );
-    } catch (err) {
-      console.log(err);
     }
   }
 }

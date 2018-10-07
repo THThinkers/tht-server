@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Schema, Model, Document } from 'mongoose'; // typescript d.ts
+import { Document, Model, Schema } from 'mongoose'; // typescript d.ts
 
 // model은 내부에서 this를 쓰기 떄문에 destructuring하면 binding이 안된다.
 
@@ -70,8 +70,8 @@ UserSchema.statics.findOneOrCreate = function findOneOrCreate(query, ...args) {
     if (user) {
       return callback(null, user);
     }
-    self.create(query, (err, user) => {
-      return callback(err, user);
+    self.create(query, (error, newUser) => {
+      return callback(error, newUser);
     });
   });
 };

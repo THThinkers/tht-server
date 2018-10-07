@@ -1,4 +1,4 @@
-import { Response, Request } from 'express';
+import { Request, Response } from 'express';
 import request from 'request';
 import User, { IUser } from '../../schema/User';
 
@@ -28,11 +28,11 @@ const callbackKakao = (req: Request, res: Response) => {
         },
       };
       // 받은 토큰을 이용해 프로필 요청
-      request.get(options, (err, _, body) => {
-        const profile = JSON.parse(body);
+      request.get(options, (reqErr, __, reqBody) => {
+        const profile = JSON.parse(reqBody);
         const query = { kakaoId: profile.id };
         const projection = { _id: 1 };
-        const callback = (err, user) => {
+        const handleResponse = (error, user) => {
           if (req.session) {
             req.session.passport = {
               user,
@@ -40,13 +40,14 @@ const callbackKakao = (req: Request, res: Response) => {
             return res.redirect(UI_SERVER!);
           }
         };
-        User.findOneOrCreate(query, projection, callback);
+        User.findOneOrCreate(query, projection, handleResponse);
       });
     },
   );
 };
 const oauthKakao = (_, res: Response) => {
   return res.redirect(
+    // tslint:disable-next-line:max-line-length
     `https://kauth.kakao.com/oauth/authorize?client_id=${KAUTH_APP_KEY}&redirect_uri=${KAUTH_REDIRECT_URL}&response_type=code`,
   );
 };
@@ -58,17 +59,17 @@ const putProfile = (req: Request, res: Response) => {
     ...rest,
     isVerified: true,
   };
-  const callback = (err, user) => {
+  const handleResponse = (err, userData) => {
     if (err) {
       return res.status(503).json({
         message: 'Database error',
       });
     }
     return res.json({
-      user,
+      user: userData,
     });
   };
-  User.findByIdAndUpdate(_id, updateField, { new: true }, callback);
+  User.findByIdAndUpdate(_id, updateField, { new: true }, handleResponse);
 };
 const getProfile = (req: Request, res: Response) => {
   return res.json({
@@ -78,7 +79,7 @@ const getProfile = (req: Request, res: Response) => {
 
 const logout = (req: Request, res: Response) => {
   if (req.session) {
-    req.session.destroy(err => {
+    req.session.destroy((err) => {
       return res.redirect(UI_SERVER!);
     });
   }

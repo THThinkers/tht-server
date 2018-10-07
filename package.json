@@ -43,6 +43,7 @@
     "@types/mongodb": "^3.1.9",
     "@types/mongoose": "^5.2.9",
     "@types/node": "^10.9.3",
-    "nodemon": "^1.18.4"
+    "nodemon": "^1.18.4",
+    "prettier-tslint": "^0.4.0"
   }
 }

@@ -13,7 +13,7 @@ export interface IColumn extends Document {
   createdAt?: Date;
 }
 
-const ColumnSchema: Schema = new Schema({
+const ColumnSchema = new Schema({
   docNo: { type: Number, required: true },
   author: { type: Schema.Types.ObjectId, ref: 'User' },
   nextAuthor: { type: Schema.Types.ObjectId, ref: 'User' },
