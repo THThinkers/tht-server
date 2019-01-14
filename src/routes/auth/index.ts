@@ -2,6 +2,7 @@ import express from 'express';
 import passport from 'passport';
 
 import * as controller from './controller';
+import * as errorHandler from './error';
 
 const router = express.Router();
 
@@ -30,5 +31,7 @@ router.get('/oauth/callback/kakao', controller.callbackKakao);
 
 router.get('/profile', controller.getProfile);
 router.get('/logout', controller.logout);
+
+router.use(errorHandler.authErrorHandler);
 
 export default router;

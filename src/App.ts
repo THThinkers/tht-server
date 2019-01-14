@@ -6,6 +6,7 @@ import session from 'express-session';
 import helmet from 'helmet';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
+import uncaughtHandler from './handlers/uncaught';
 import passport from './passport';
 import routes from './routes';
 
@@ -46,6 +47,8 @@ class App {
 
   // 앱 초기화. 미들웨어 추가
   private init(): void {
+    // uncaught 에러 핸들링
+    uncaughtHandler();
     // 보안용
     // http 헤더를 설정해서 일반적인 보안 옵션을 제공하는듯함
     this.app.use(helmet());

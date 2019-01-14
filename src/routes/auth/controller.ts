@@ -8,7 +8,7 @@ const callback = (req: Request, res: Response) => {
   // 기본 정보를 입력 했는지. 필드를 따로 만드는 게 좋을 듯?
   return res.redirect(UI_SERVER!);
 };
-const callbackKakao = (req: Request, res: Response) => {
+const callbackKakao = (req: Request, res: Response, next) => {
   const { code } = req.query;
   const data = {
     grant_type: 'authorization_code',
@@ -33,6 +33,10 @@ const callbackKakao = (req: Request, res: Response) => {
         const query = { kakaoId: profile.id };
         const projection = { _id: 1 };
         const handleResponse = (error, user) => {
+          if (error) {
+            error.isOperational = true;
+            next(error);
+          }
           if (req.session) {
             req.session.passport = {
               user,
@@ -40,7 +44,12 @@ const callbackKakao = (req: Request, res: Response) => {
             return res.redirect(UI_SERVER!);
           }
         };
-        User.findOneOrCreate(query, projection, handleResponse);
+        try {
+          User.findOneOrCreate(query, projection, handleResponse);
+        } catch (err) {
+          err.isOperational = true;
+          next(err);
+        }
       });
     },
   );
@@ -52,7 +61,7 @@ const oauthKakao = (_, res: Response) => {
   );
 };
 
-const putProfile = (req: Request, res: Response) => {
+const putProfile = (req: Request, res: Response, next) => {
   const user: IUser = req.body;
   const { _id, ...rest } = user;
   const updateField = {
@@ -61,9 +70,8 @@ const putProfile = (req: Request, res: Response) => {
   };
   const handleResponse = (err, userData) => {
     if (err) {
-      return res.status(503).json({
-        message: 'Database error',
-      });
+      err.isOperational = true;
+      next(err);
     }
     return res.json({
       user: userData,
@@ -77,9 +85,12 @@ const getProfile = (req: Request, res: Response) => {
   });
 };
 
-const logout = (req: Request, res: Response) => {
+const logout = (req: Request, res: Response, next) => {
   if (req.session) {
-    req.session.destroy((err) => {
+    req.session.destroy(err => {
+      if (err) {
+        next(err);
+      }
       return res.redirect(UI_SERVER!);
     });
   }
