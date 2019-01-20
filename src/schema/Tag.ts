@@ -1,10 +1,14 @@
-import mongoose from 'mongoose';
+import mongoose, { Document, Model } from 'mongoose';
 
 const { Schema } = mongoose;
 
+export interface ITag extends Document {
+  tag: string;
+  createAt: Date;
+}
 const TagSchema = new Schema({
   tag: String,
-  createdAt: Date,
+  createdAt: { type: Date, default: Date.now },
 });
 
-export default mongoose.model('Tag', TagSchema);
+export default mongoose.model<ITag>('Tag', TagSchema) as Model<ITag>;

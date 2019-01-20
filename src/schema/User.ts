@@ -10,6 +10,7 @@ export interface IUser extends Document {
   password?: string;
   isAdmin?: boolean;
   isVerified?: boolean;
+  fillRequired?: boolean;
   kakaoId?: string;
   googleId?: string;
   profilePicture?: string;
@@ -21,16 +22,19 @@ export interface IUser extends Document {
   tags: [{}];
   createdAt: Date;
 }
-
-export interface IUserModel extends Model<IUser> {
+interface IUserDocument extends IUser {
+  comparePassword(password: string): boolean;
+}
+export interface IUserModel extends Model<IUserDocument> {
   findOneOrCreate(query: {}, ...args): void;
 }
 
 const UserSchema = new Schema({
   name: String,
   password: String,
-  isAdmin: Boolean, // 학회장 권한 설정
-  isVerified: { type: Boolean, default: false }, // 필수 정보입력 했는지 여부
+  isAdmin: { type: Boolean, default: false }, // 학회장 권한 설정
+  isVerified: { type: Boolean, default: false }, // 학회장 승인 받았는지 여부
+  fillRequired: { type: Boolean, default: false }, // 필수 정보 입력했는지 여부
   kakaoId: { type: String, default: null }, // 카카오 연동을 위함
   googleId: { type: String, default: null }, // 구글 로그인 api에서 제공하는 id.
   profilePicture: String,
@@ -56,9 +60,18 @@ const UserSchema = new Schema({
   // ... 기타
   /* ------------------------- */
 
-  createdAt: Date,
+  createdAt: { type: Date, default: Date.now },
 });
 
+UserSchema.methods.comparePassword = function comparePassword(
+  candidate: string,
+) {
+  // TODO: 패스워드 디크립트해서 비교
+  if (this.password == candidate) {
+    return true;
+  }
+  return false;
+};
 UserSchema.statics.findOneOrCreate = function findOneOrCreate(query, ...args) {
   const self = this;
   const projection = args.length > 1 ? args[0] : {};
