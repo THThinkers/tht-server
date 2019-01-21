@@ -29,6 +29,8 @@ router.put('/oauth/profile', controller.putProfile);
 router.get('/oauth/kakao', controller.oauthKakao);
 router.get('/oauth/callback/kakao', controller.callbackKakao);
 
+router.post('/login', passport.authenticate('local'), controller.login);
+router.post('/signup', controller.signup);
 router.get('/profile', controller.getProfile);
 router.get('/logout', controller.logout);
 

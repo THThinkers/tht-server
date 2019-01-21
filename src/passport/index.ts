@@ -1,8 +1,11 @@
 import passport from 'passport';
 import User from '../schema/User';
+import { IError } from '../types/error';
 import googleStrategy from './strategy/google';
+import localStrategy from './strategy/local';
 
 // strategy 설정 - google, kakao, facebook?
+passport.use(localStrategy);
 passport.use(googleStrategy);
 interface IUser {
   _id: string;
@@ -27,11 +30,13 @@ passport.deserializeUser(async (id, done) => {
   try {
     const user = await User.findById(id);
     if (!user) {
-      return done(null);
+      const error: IError = new Error('세션 만료');
+      error.isOperational = true;
+      throw error;
     }
     return done(null, user);
   } catch (err) {
-    return done(null);
+    return done(err);
   }
 });
 

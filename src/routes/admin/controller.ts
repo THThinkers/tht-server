@@ -6,7 +6,6 @@ const login: RequestHandler = async (req, res, next) => {
   const { name, password } = req.body;
   try {
     const matchUser = await User.findOne({ name });
-    console.log(matchUser);
     const error = new Error();
     if (matchUser) {
       const matched = matchUser.comparePassword(password);

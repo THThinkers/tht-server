@@ -1,6 +1,7 @@
-import { Request, Response } from 'express';
+import { Request, RequestHandler, Response } from 'express';
 import request from 'request';
 import User, { IUser } from '../../schema/User';
+import { IUserSignup } from '../../types/user';
 
 const { UI_SERVER, KAUTH_APP_KEY, KAUTH_REDIRECT_URL } = process.env;
 /* oauth callback, putProfile */
@@ -64,9 +65,9 @@ const oauthKakao = (_, res: Response) => {
 const putProfile = (req: Request, res: Response, next) => {
   const user: IUser = req.body;
   const { _id, ...rest } = user;
-  const updateField = {
+  const updateField: Partial<IUser> = {
     ...rest,
-    isVerified: true,
+    fillRequired: true,
   };
   const handleResponse = (err, userData) => {
     if (err) {
@@ -84,10 +85,22 @@ const getProfile = (req: Request, res: Response) => {
     user: req.user,
   });
 };
-
+// 패스포트 local strategy 완료 후 콜백
+const login: RequestHandler = (req, res, next) => {
+  if (req.user) {
+    return res.json({
+      success: true,
+    });
+  } else {
+    // 아마 여기에 올일 없을거라 예상
+    return res.status(403).json({
+      success: false,
+    });
+  }
+};
 const logout = (req: Request, res: Response, next) => {
   if (req.session) {
-    req.session.destroy(err => {
+    req.session.destroy((err) => {
       if (err) {
         next(err);
       }
@@ -95,4 +108,31 @@ const logout = (req: Request, res: Response, next) => {
     });
   }
 };
-export { callback, callbackKakao, oauthKakao, getProfile, putProfile, logout };
+const signup: RequestHandler = (req, res, next) => {
+  const { username, password, name } = req.body;
+  try {
+    const user = new User({ username, password, name });
+    user.save((err, savedUser) => {
+      if (err) {
+        err.isOperational = true;
+        throw err;
+      }
+      console.log(savedUser);
+      res.json({
+        success: true,
+      });
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+export {
+  callback,
+  callbackKakao,
+  oauthKakao,
+  getProfile,
+  putProfile,
+  login,
+  logout,
+  signup,
+};

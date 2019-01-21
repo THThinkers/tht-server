@@ -7,6 +7,7 @@ import { Document, Model, Schema } from 'mongoose'; // typescript d.ts
 // User 모델은 밖으로 뺴놔도 좋을듯?
 export interface IUser extends Document {
   name?: string;
+  username?: string;
   password?: string;
   isAdmin?: boolean;
   isVerified?: boolean;
@@ -31,6 +32,7 @@ export interface IUserModel extends Model<IUserDocument> {
 
 const UserSchema = new Schema({
   name: String,
+  username: String, // id
   password: String,
   isAdmin: { type: Boolean, default: false }, // 학회장 권한 설정
   isVerified: { type: Boolean, default: false }, // 학회장 승인 받았는지 여부
@@ -63,11 +65,12 @@ const UserSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+// this.password 가져오려면 password 필드 projection에 넣어줘야함.
 UserSchema.methods.comparePassword = function comparePassword(
   candidate: string,
 ) {
   // TODO: 패스워드 디크립트해서 비교
-  if (this.password == candidate) {
+  if (this.password === candidate) {
     return true;
   }
   return false;
