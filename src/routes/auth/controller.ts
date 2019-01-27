@@ -1,14 +1,22 @@
 import { Request, RequestHandler, Response } from 'express';
 import request from 'request';
 import User, { IUser } from '../../schema/User';
+import { IError } from '../../types/error';
 import { IUserSignup } from '../../types/user';
 
 const { UI_SERVER, KAUTH_APP_KEY, KAUTH_REDIRECT_URL } = process.env;
-/* oauth callback, putProfile */
+/* 구글 로그인시 callback */
 const callback = (req: Request, res: Response) => {
-  // 기본 정보를 입력 했는지. 필드를 따로 만드는 게 좋을 듯?
+  if (req.session && req.session.passport) {
+    const { user }: { user: IUser } = req.session.passport;
+    if (!user.fillRequired) {
+      // 로컬 로그인 정보를 채우지 않은 유저.
+      return res.redirect(`${UI_SERVER}/auth/check`);
+    }
+  }
   return res.redirect(UI_SERVER!);
 };
+// 카카오 로그인시 콜백
 const callbackKakao = (req: Request, res: Response, next) => {
   const { code } = req.query;
   const data = {
@@ -42,6 +50,9 @@ const callbackKakao = (req: Request, res: Response, next) => {
             req.session.passport = {
               user,
             };
+            if (!user.fillRequired) {
+              return res.redirect(`${UI_SERVER}/auth/check`);
+            }
             return res.redirect(UI_SERVER!);
           }
         };
@@ -62,24 +73,6 @@ const oauthKakao = (_, res: Response) => {
   );
 };
 
-const putProfile = (req: Request, res: Response, next) => {
-  const user: IUser = req.body;
-  const { _id, ...rest } = user;
-  const updateField: Partial<IUser> = {
-    ...rest,
-    fillRequired: true,
-  };
-  const handleResponse = (err, userData) => {
-    if (err) {
-      err.isOperational = true;
-      next(err);
-    }
-    return res.json({
-      user: userData,
-    });
-  };
-  User.findByIdAndUpdate(_id, updateField, { new: true }, handleResponse);
-};
 const getProfile = (req: Request, res: Response) => {
   return res.json({
     user: req.user,
@@ -108,6 +101,7 @@ const logout = (req: Request, res: Response, next) => {
     });
   }
 };
+// 로컬 signup과 oauth signup 구분 필요
 const signup: RequestHandler = (req, res, next) => {
   const { username, password, name } = req.body;
   try {
@@ -117,7 +111,6 @@ const signup: RequestHandler = (req, res, next) => {
         err.isOperational = true;
         throw err;
       }
-      console.log(savedUser);
       res.json({
         success: true,
       });
@@ -126,12 +119,41 @@ const signup: RequestHandler = (req, res, next) => {
     next(err);
   }
 };
+const oauthSignup: RequestHandler = (req, res, next) => {
+  const { _id, username, password, name } = req.body;
+  User.findById(_id, (err, user) => {
+    if (err) {
+      err.isOperational = true;
+      next(err);
+    }
+    if (!user) {
+      const error: IError = new Error('Oauth 인증에 실패하였습니다.');
+      error.isOperational = true;
+      next(error);
+    }
+    user = Object.assign(user, {
+      fillRequired: true,
+      username,
+      password,
+      name,
+    });
+    user.save((error, updatedUser) => {
+      if (error) {
+        error.isOperational = true;
+        next(error);
+      }
+      res.json({
+        success: true,
+      });
+    });
+  });
+};
 export {
   callback,
   callbackKakao,
   oauthKakao,
+  oauthSignup,
   getProfile,
-  putProfile,
   login,
   logout,
   signup,

@@ -15,7 +15,6 @@ router.get(
   }),
 );
 
-router.put('/oauth/profile', controller.putProfile);
 // router.get('/kakao', controller.kakaoLogin);
 
 router.get(
@@ -23,7 +22,7 @@ router.get(
   passport.authenticate('google', { failureRedirect: '/login' }),
   controller.callback,
 );
-router.put('/oauth/profile', controller.putProfile);
+router.post('/oauth/signup', controller.oauthSignup);
 
 // Kakao 로그인 테스트
 router.get('/oauth/kakao', controller.oauthKakao);
