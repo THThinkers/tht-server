@@ -1,11 +1,16 @@
 import express from 'express';
 import passport from 'passport';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDoc from './swagger.json';
 
 import * as controller from './controller';
 import * as errorHandler from './error';
 
 const router = express.Router();
 
+// Swagger 설정.
+router.use('/', swaggerUi.serve);
+router.get('/', swaggerUi.setup(swaggerDoc));
 // oauth routing
 // api 한번 정리 필요!
 router.get(

@@ -3,12 +3,12 @@ import errorHandler from '../../handlers/error';
 import { IError } from '../../types/error';
 
 export const authErrorHandler = async (
-  err: IError,
+  err: any,
   req: Request,
   res: Response,
 ) => {
   await errorHandler(err);
-  res.json({
+  res.status(err.statusCode || 403).json({
     error: err.message,
   });
 };

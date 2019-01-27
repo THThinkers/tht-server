@@ -1,0 +1,105 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "THThinker API",
+    "description": "THThinker의 웹사이트 api 문서",
+    "version": "0.0.1"
+  },
+  "servers": [
+    { "url": "http://localhost:4000/api/auth", "description": "Auth API" }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "summary": "로그인",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "로그인 완료",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          },
+          "403": { "description": "로그인 실패" }
+        }
+      }
+    },
+    "/signup": {
+      "post": {
+        "summary": "회원가입",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" },
+                  "name": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "회원가입 완료" } }
+      }
+    },
+    "/profile": {
+      "get": {
+        "summary": "프로필 조회",
+        "responses": {
+          "200": {
+            "description": "loggedIn",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "object",
+                      "description": "유저 정보"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/logout": {
+      "get": {
+        "summary": "로그아웃",
+        "responses": {
+          "200": {
+            "description": "로그아웃 성공"
+          },
+          "403": {
+            "description": "로그아웃 실패"
+          }
+        }
+      }
+    }
+  }
+}
