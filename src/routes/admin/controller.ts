@@ -3,9 +3,9 @@ import User, { IUser } from '../../schema/User';
 
 // admin 계정 로그인. 세션에 저장해도 되나?
 const login: RequestHandler = async (req, res, next) => {
-  const { name, password } = req.body;
+  const { username, password } = req.body;
   try {
-    const matchUser = await User.findOne({ name });
+    const matchUser = await User.findOne({ username });
     const error = new Error();
     if (matchUser) {
       const matched = matchUser.comparePassword(password);

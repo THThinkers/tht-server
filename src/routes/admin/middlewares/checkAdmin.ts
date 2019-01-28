@@ -6,7 +6,7 @@ const checkAdmin: RequestHandler = async (req, res, next) => {
   const errorHandler = (message: string) => {
     const error: IError = new Error(message);
     error.isOperational = true;
-    throw error;
+    next(error);
   };
   if (req.session) {
     try {

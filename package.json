@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/THThinkers/tht-server#readme",
   "dependencies": {
+    "@sendgrid/mail": "^6.3.1",
     "@types/body-parser": "^1.17.0",
     "@types/express-session": "^1.15.10",
     "@types/passport": "^0.4.6",

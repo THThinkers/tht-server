@@ -1,6 +1,6 @@
 import { ErrorRequestHandler } from 'express';
-import { IError } from '../../types/error';
 import errorHandler from '../../handlers/error';
+import { IError } from '../../types/error';
 
 const adminErrorHandler: ErrorRequestHandler = async (err, req, res, next) => {
   await errorHandler(err);

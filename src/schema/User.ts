@@ -44,7 +44,7 @@ const UserSchema = new Schema({
   /* --------- 사용자 정보 ----- */
   description: { type: String, default: '안녕하세요' }, // 자기소개
   // 학회 활동 기간을 측정하기 위해서 가입, 종료 시점을 보여줌
-  joind: Date,
+  joined: Date,
   ended: Date,
   major: String, // 전공
   studentId: { type: Number, min: 0, max: 99 }, // 학번년도
