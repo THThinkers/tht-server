@@ -6,6 +6,7 @@ export const authErrorHandler = async (
   err: any,
   req: Request,
   res: Response,
+  next,
 ) => {
   await errorHandler(err);
   res.status(err.statusCode || 403).json({

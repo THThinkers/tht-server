@@ -1,4 +1,4 @@
-const authMiddelware = (req, res, next) => {
+const authenticator = (req, res, next) => {
   if (!req.user) {
     return res.status(401).json({
       message: 'Login Required',
@@ -7,4 +7,4 @@ const authMiddelware = (req, res, next) => {
   next();
 };
 
-export default authMiddelware;
+export default authenticator;

@@ -28,14 +28,16 @@ const verifyUser: RequestHandler = async (req, res, next) => {
       throw new Error('회원을 찾을 수 없습니다.');
     }
     const { username } = user;
-    const msg = {
-      to: username || 'tmqps78@gmail.com',
-      from: 'tht@bjbj.com',
-      subject: 'THThinker 회원 인증',
-      text: 'THThinker 홈페이지 회원 인증이 완료되었습니다.',
-      html: sgHtml,
-    };
-    sgMail.send(msg);
+    if (username) {
+      const msg = {
+        to: username,
+        from: 'thtforever05@gmail.com',
+        subject: 'THThinker 회원 인증',
+        text: 'THThinker 홈페이지 회원 인증이 완료되었습니다.',
+        html: sgHtml,
+      };
+      sgMail.send(msg);
+    }
     res.json({
       success: true,
     });

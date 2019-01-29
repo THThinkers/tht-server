@@ -3,8 +3,10 @@ import passport from 'passport';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDoc from './swagger.json';
 
+import validator from '../../middlewares/validator';
 import * as controller from './controller';
 import * as errorHandler from './error';
+import { userSchema } from './schema';
 
 const router = express.Router();
 
@@ -27,14 +29,19 @@ router.get(
   passport.authenticate('google', { failureRedirect: '/login' }),
   controller.callback,
 );
-router.post('/oauth/signup', controller.oauthSignup);
+router.post('/oauth/signup', validator(userSchema), controller.oauthSignup);
 
 // Kakao 로그인 테스트
 router.get('/oauth/kakao', controller.oauthKakao);
 router.get('/oauth/callback/kakao', controller.callbackKakao);
 
-router.post('/login', passport.authenticate('local'), controller.login);
-router.post('/signup', controller.signup);
+router.post(
+  '/login',
+  validator(userSchema),
+  passport.authenticate('local'),
+  controller.login,
+);
+router.post('/signup', validator(userSchema), controller.signup);
 router.get('/profile', controller.getProfile);
 router.get('/logout', controller.logout);
 
