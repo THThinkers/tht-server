@@ -57,10 +57,13 @@ class App {
     // 로그 기록용
     this.app.use(morgan('dev'));
     // body 사용
-    this.app.use(bodyParser());
+    this.app.use(bodyParser.urlencoded({ extended: true }));
+    this.app.use(bodyParser.json());
     // express 에서 session 사용하기 위한 설정 - 세부 설정 필요.
     this.app.use(
       session({
+        resave: false,
+        saveUninitialized: false,
         secret: process.env.SESSION_KEY!,
       }),
     );
