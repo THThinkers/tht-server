@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
 import { Document, Model, Schema } from 'mongoose'; // typescript d.ts
-
 // model은 내부에서 this를 쓰기 떄문에 destructuring하면 binding이 안된다.
-
+import { checkPassword, generateHash } from '../utils/crypt';
 // mongoose typescript 모델링
 // User 모델은 밖으로 뺴놔도 좋을듯?
 export interface IUser extends Document {
@@ -65,15 +64,29 @@ const UserSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+UserSchema.pre('save', async function(this, next) {
+  const user = this as IUser;
+  try {
+    if (!user.password) {
+      throw new Error('암호화활 패스워드가 없습니다.');
+    }
+    const hash = await generateHash(user.password);
+    user.password = hash;
+  } catch (err) {
+    err.isOperational = true;
+    next(err);
+  }
+});
 // this.password 가져오려면 password 필드 projection에 넣어줘야함.
-UserSchema.methods.comparePassword = function comparePassword(
+UserSchema.methods.comparePassword = async function comparePassword(
   candidate: string,
 ) {
-  // TODO: 패스워드 디크립트해서 비교
-  if (this.password === candidate) {
-    return true;
+  try {
+    const isMatch = await checkPassword(candidate, this.password);
+    return isMatch;
+  } catch (err) {
+    return false;
   }
-  return false;
 };
 UserSchema.statics.findOneOrCreate = function findOneOrCreate(query, ...args) {
   const self = this;

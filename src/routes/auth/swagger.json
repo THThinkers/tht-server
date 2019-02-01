@@ -100,6 +100,61 @@
           }
         }
       }
+    },
+    "/oauth/google": {
+      "get": {
+        "summary": "구글 로그인",
+        "responses": {
+          "301": {
+            "description": "로그인 성공시 UI_SERVER로 redirect. 실패시 UI_SERVER/auth/check로 redirect"
+          },
+          "403": {
+            "description": "데이터베이스 에러"
+          }
+        }
+      }
+    },
+    "/oauth/kakao": {
+      "get": {
+        "summary": "카카오 로그인",
+        "responses": {
+          "301": {
+            "description": "로그인 성공시 UI_SERVER로 redirect. 실패시 UI_SERVER/auth/check로 redirect"
+          },
+          "403": {
+            "description": "데이터베이스 에러"
+          }
+        }
+      }
+    },
+    "/oauth/signup": {
+      "get": {
+        "summary": "Oauth 계정 회원가입",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "_id": { "type": "string" },
+                  "username": { "type": "string" },
+                  "password": { "type": "string" },
+                  "name": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "301": {
+            "description": "로그인 성공시 UI_SERVER로 redirect. 실패시 UI_SERVER/auth/check로 redirect"
+          },
+          "403": {
+            "description": "데이터베이스 에러"
+          }
+        }
+      }
     }
   }
 }

@@ -119,6 +119,7 @@ const signup: RequestHandler = (req, res, next) => {
     next(err);
   }
 };
+// oauth계정 회원가입시 _id 필요
 const oauthSignup: RequestHandler = (req, res, next) => {
   const { _id, username, password, name } = req.body;
   User.findById(_id, (err, user) => {

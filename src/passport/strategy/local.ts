@@ -14,7 +14,8 @@ const localStrategy = new LocalStrategy(
         error.isOperational = true;
         throw error;
       }
-      if (!user.comparePassword(password)) {
+      const isMatch = await user.comparePassword(password);
+      if (!isMatch) {
         error.message = '잘못된 아이디 혹은 비밀번호.';
         error.isOperational = true;
         throw error;
