@@ -30,8 +30,7 @@ export interface IUserModel extends Model<IUserDocument> {
 }
 
 const UserSchema = new Schema({
-  name: String,
-  username: String, // id
+  username: String, // id (email 형식)
   password: String,
   isAdmin: { type: Boolean, default: false }, // 학회장 권한 설정
   isVerified: { type: Boolean, default: false }, // 학회장 승인 받았는지 여부
@@ -41,6 +40,7 @@ const UserSchema = new Schema({
   profilePicture: String,
 
   /* --------- 사용자 정보 ----- */
+  name: String, // 사용자 이름
   description: { type: String, default: '안녕하세요' }, // 자기소개
   // 학회 활동 기간을 측정하기 위해서 가입, 종료 시점을 보여줌
   joined: Date,

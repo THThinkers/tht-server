@@ -6,7 +6,20 @@ import userRoute from './user';
 
 const router = express.Router();
 
-router.get('/', (req, res) => res.sendFile(__dirname + '/test.html'));
+router.get('/', async (req, res, next) => {
+  // admin page 테스트용
+  const checkLogin = (err) => {
+    if (err) {
+      return res.sendFile(__dirname + '/test.html');
+    }
+    return res.sendFile(__dirname + '/home.html');
+  };
+  try {
+    await checkAdmin(req, res, (err) => checkLogin(err));
+  } catch (err) {
+    next(err);
+  }
+});
 router.post('/login', controller.login); // 어드민으로 로그인
 
 // 아래 라우트는 전부 admin 체크 후 진행
