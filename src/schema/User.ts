@@ -10,6 +10,7 @@ export interface IUser extends Document {
   password?: string;
   isAdmin?: boolean;
   isVerified?: boolean;
+  isLinked?: boolean;
   fillRequired?: boolean;
   kakaoId?: string;
   googleId?: string;
@@ -34,6 +35,7 @@ const UserSchema = new Schema({
   password: String,
   isAdmin: { type: Boolean, default: false }, // 학회장 권한 설정
   isVerified: { type: Boolean, default: false }, // 학회장 승인 받았는지 여부
+  isLinked: { type: Boolean, default: false }, // 소셜계정이랑 연동됐는지 여부
   fillRequired: { type: Boolean, default: false }, // 필수 정보 입력했는지 여부
   kakaoId: { type: String, default: null }, // 카카오 연동을 위함
   googleId: { type: String, default: null }, // 구글 로그인 api에서 제공하는 id.

@@ -6,15 +6,22 @@ import { IUserSignup } from '../../types/user';
 
 const { UI_SERVER, KAUTH_APP_KEY, KAUTH_REDIRECT_URL } = process.env;
 /* 구글 로그인시 callback */
-const callback = (req: Request, res: Response) => {
-  if (req.session && req.session.passport) {
-    const { user }: { user: IUser } = req.session.passport;
-    if (!user.fillRequired) {
-      // 로컬 로그인 정보를 채우지 않은 유저.
-      return res.redirect(`${UI_SERVER}/auth/check`);
+interface ICallbackRequest extends Request {
+  user?: IUser;
+}
+const callback = (req: ICallbackRequest, res: Response) => {
+  let redirectUrl = UI_SERVER!;
+  if (req.user) {
+    if (!req.user._id) {
+      if (req.user.googleId) {
+        redirectUrl = `${redirectUrl}/auth/check?googleId=${req.user.googleId}`;
+      }
+      if (req.user.username) {
+        redirectUrl = `${redirectUrl}&username=${req.user.username}`;
+      }
     }
   }
-  return res.redirect(UI_SERVER!);
+  return res.redirect(redirectUrl);
 };
 // 카카오 로그인시 콜백
 const callbackKakao = (req: Request, res: Response, next) => {
@@ -37,27 +44,26 @@ const callbackKakao = (req: Request, res: Response, next) => {
         },
       };
       // 받은 토큰을 이용해 프로필 요청
-      request.get(options, (reqErr, __, reqBody) => {
+      request.get(options, async (reqErr, __, reqBody) => {
         const profile = JSON.parse(reqBody);
-        const query = { kakaoId: profile.id };
+        const kakaoId = profile.id;
+        const query = { kakaoId };
         const projection = { _id: 1 };
-        const handleResponse = (error, user) => {
-          if (error) {
-            error.isOperational = true;
-            next(error);
+        try {
+          const user = await User.findOne(query, projection);
+          // 카카오 유저 연동 안되어있을시. 중복체크 없이 바로 유저에게 정보 요청
+          if (!user) {
+            return res.redirect(
+              `${UI_SERVER}/auth/check?kakaoId=${profile.id}`,
+            );
           }
+          // 카카오 유저 연동 되있을 시( isLinked 없어도 연동되어있다고 가정 )
           if (req.session) {
             req.session.passport = {
               user,
             };
-            if (!user.fillRequired) {
-              return res.redirect(`${UI_SERVER}/auth/check`);
-            }
-            return res.redirect(UI_SERVER!);
           }
-        };
-        try {
-          User.findOneOrCreate(query, projection, handleResponse);
+          return res.redirect(UI_SERVER!);
         } catch (err) {
           err.isOperational = true;
           next(err);
@@ -73,7 +79,10 @@ const oauthKakao = (_, res: Response) => {
   );
 };
 
-const getProfile = (req: Request, res: Response) => {
+const getProfile = async (req: Request, res: Response) => {
+  if (!req.user || !req.user.id) {
+    delete req.user;
+  }
   return res.json({
     user: req.user,
   });
@@ -93,7 +102,7 @@ const login: RequestHandler = (req, res, next) => {
 };
 const logout = (req: Request, res: Response, next) => {
   if (req.session) {
-    req.session.destroy((err) => {
+    req.session.destroy(err => {
       if (err) {
         next(err);
       }
@@ -149,11 +158,37 @@ const oauthSignup: RequestHandler = (req, res, next) => {
     });
   });
 };
+// 기존계정 또는 새로 만든 계정과 oauth 계정을 link
+const oauthLink: RequestHandler = async (req, res, next) => {
+  const { username, ...restInfo } = req.body; // kakaoId 또는 googleId 필수
+  try {
+    let existUser = await User.findOne({ username });
+    // 기존계정에 연동하는 방법
+    if (existUser) {
+      existUser = Object.assign({}, existUser, restInfo as Partial<IUser>, {
+        isLinked: true,
+      });
+      await existUser.save();
+      return res.json({
+        success: true,
+      });
+    }
+    const newUser = new User({ username, ...restInfo, isLinked: true });
+    await newUser.save();
+    return res.json({
+      success: true,
+    });
+  } catch (err) {
+    err.isOperational = true;
+    next(err);
+  }
+};
 export {
   callback,
   callbackKakao,
   oauthKakao,
   oauthSignup,
+  oauthLink,
   getProfile,
   login,
   logout,

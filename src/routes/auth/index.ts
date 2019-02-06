@@ -29,11 +29,12 @@ router.get(
   passport.authenticate('google', { failureRedirect: '/login' }),
   controller.callback,
 );
-router.post('/oauth/signup', validator(userSchema), controller.oauthSignup);
-
 // Kakao 로그인 테스트
 router.get('/oauth/kakao', controller.oauthKakao);
 router.get('/oauth/callback/kakao', controller.callbackKakao);
+
+router.post('/oauth/signup', validator(userSchema), controller.oauthSignup);
+router.post('/oauth/link', validator(userSchema), controller.oauthLink);
 
 router.post(
   '/login',
