@@ -1,8 +1,9 @@
 import express from 'express';
 import passport from 'passport';
 import swaggerUi from 'swagger-ui-express';
+import swaggerDoc from './swagger.json';
+
 import oauthRoute from './oauth';
-import swaggerDoc from './swagger';
 import validationRoute from './validation';
 
 import validator from '../../middlewares/validator';
@@ -13,7 +14,6 @@ import { userSchema } from './schema';
 const router = express.Router();
 
 /* /api/auth/ */
-
 // Swagger 설정.
 router.use('/', swaggerUi.serve);
 router.get('/', swaggerUi.setup(swaggerDoc));
