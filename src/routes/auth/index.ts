@@ -1,7 +1,9 @@
 import express from 'express';
 import passport from 'passport';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDoc from './swagger.json';
+import oauthRoute from './oauth';
+import swaggerDoc from './swagger';
+import validationRoute from './validation';
 
 import validator from '../../middlewares/validator';
 import * as controller from './controller';
@@ -10,31 +12,17 @@ import { userSchema } from './schema';
 
 const router = express.Router();
 
+/* /api/auth/ */
+
 // Swagger 설정.
 router.use('/', swaggerUi.serve);
 router.get('/', swaggerUi.setup(swaggerDoc));
+
+// child 라우트 정리
+router.use('/validation', validationRoute);
+router.use('/oauth', oauthRoute);
 // oauth routing
 // api 한번 정리 필요!
-router.get(
-  '/oauth/google',
-  passport.authenticate('google', {
-    scope: ['profile', 'email'],
-  }),
-);
-
-// router.get('/kakao', controller.kakaoLogin);
-
-router.get(
-  '/oauth/callback',
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  controller.callback,
-);
-// Kakao 로그인 테스트
-router.get('/oauth/kakao', controller.oauthKakao);
-router.get('/oauth/callback/kakao', controller.callbackKakao);
-
-router.post('/oauth/signup', validator(userSchema), controller.oauthSignup);
-router.post('/oauth/link', validator(userSchema), controller.oauthLink);
 
 router.post(
   '/login',
