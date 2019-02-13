@@ -12,9 +12,12 @@ const checkAdmin: RequestHandler = async (req, res, next) => {
     try {
       const { admin } = req.session;
       if (!admin || !admin.id) {
-        return errorHandler('Cannot find logged in admin.');
+        (req as any).admin = {};
+        return res.json({
+          admin: null,
+        });
       }
-      const matchAdmin = User.findById(admin.id);
+      const matchAdmin = await User.findById(admin.id, '_id name');
       (req as any).admin = matchAdmin;
       next();
     } catch (err) {

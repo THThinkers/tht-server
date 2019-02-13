@@ -31,4 +31,35 @@ const login: RequestHandler = async (req, res, next) => {
     next(err);
   }
 };
-export { login };
+
+const logout: RequestHandler = async (req, res, next) => {
+  if (req.session) {
+    req.session.destroy((err) => {
+      if (err) {
+        next(err);
+      }
+      return res.json({
+        success: true,
+      });
+    });
+  } else {
+    return res.json({
+      success: true,
+    });
+  }
+};
+
+const getProfile: RequestHandler = async (req, res, next) => {
+  const admin = (req as any).admin;
+  if (admin) {
+    return res.json({
+      admin,
+    });
+  } else {
+    return res.json({
+      admin: null,
+    });
+  }
+};
+
+export { login, logout, getProfile };

@@ -21,6 +21,8 @@ router.get('/', async (req, res, next) => {
   }
 });
 router.post('/login', controller.login); // 어드민으로 로그인
+router.get('/logout', controller.logout);
+router.get('/profile', checkAdmin, controller.getProfile);
 
 // 아래 라우트는 전부 admin 체크 후 진행
 router.use(checkAdmin);
