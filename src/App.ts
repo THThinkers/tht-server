@@ -9,6 +9,7 @@ import morgan from 'morgan';
 import uncaughtHandler from './handlers/uncaught';
 import passport from './passport';
 import routes from './routes';
+import sendgrid from './utils/sendgrid';
 
 // Server Interface
 export interface IServerSettings {
@@ -70,6 +71,8 @@ class App {
     // Passport 설정 - Passport session은 passport/index.ts 파일 커맨트 참고.
     this.app.use(passport.initialize());
     this.app.use(passport.session());
+    // sendgrid email 설정
+    this.app.use(sendgrid.init());
     // REST Api 라우팅
     this.app.use('/api', routes);
   }
@@ -78,10 +81,7 @@ class App {
     console.log(chalk.bgBlue(' DATABASE ') + chalk.blue(' Connecting DB'));
     // DB settings
     try {
-      await mongoose.connect(
-        dburl,
-        { useNewUrlParser: true },
-      );
+      await mongoose.connect(dburl, { useNewUrlParser: true });
       console.log(
         chalk.bgBlue(' DATABASE ') + chalk.blue(' DB Connection Success '),
       );
