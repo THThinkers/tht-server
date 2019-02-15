@@ -3,6 +3,7 @@ import passport from 'passport';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDoc from './swagger.json';
 
+import findRoute from './find';
 import oauthRoute from './oauth';
 import validationRoute from './validation';
 
@@ -20,9 +21,8 @@ router.get('/', swaggerUi.setup(swaggerDoc));
 
 // child 라우트 정리
 router.use('/validation', validationRoute);
+router.use('/find', findRoute);
 router.use('/oauth', oauthRoute);
-// oauth routing
-// api 한번 정리 필요!
 
 router.post(
   '/login',
