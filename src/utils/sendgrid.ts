@@ -19,16 +19,17 @@ const init = (): RequestHandler => (req, res, next) => {
     const html = fs.readFileSync(path.join(__dirname, 'email.html'), 'utf-8');
     const defaultMsg = {
       from,
-      html,
     };
     const send = (
       msg: Partial<IMessage> & Pick<IMessage, 'to' | 'subject' | 'text'>,
     ) => {
-      sgMail.send({ ...defaultMsg, ...msg });
+      const parsed = html.replace('{{ text }}', msg.text);
+      sgMail.send({ ...defaultMsg, html: msg.text ? parsed : html, ...msg });
     };
     req.sgMail = {
       send,
     };
+    next();
   } catch (err) {
     next(err);
   }

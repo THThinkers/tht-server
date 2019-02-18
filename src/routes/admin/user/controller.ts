@@ -26,14 +26,12 @@ const verifyUser: RequestHandler = async (req, res, next) => {
     user.isVerified = !user.isVerified;
     await user.save();
     const { username } = user;
-    if (username) {
-      req.sgMail &&
-        req.sgMail.send({
-          to: username,
-          from: 'thtforever05@gmail.com',
-          subject: 'THThinker 회원 인증',
-          text: 'THThinker 홈페이지 회원 인증이 완료되었습니다.',
-        });
+    if (username && req.sgMail) {
+      req.sgMail.send({
+        to: username,
+        subject: 'THThinker 회원 인증',
+        text: 'THThinker 홈페이지 회원 인증이 완료되었습니다.',
+      });
     }
     res.json({
       success: true,

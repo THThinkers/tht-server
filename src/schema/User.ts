@@ -6,8 +6,8 @@ import { checkPassword, generateHash } from '../utils/crypt';
 // User 모델은 밖으로 뺴놔도 좋을듯?
 export interface IUser extends Document {
   name?: string;
-  username?: string;
-  password?: string;
+  username: string;
+  password: string;
   isAdmin?: boolean;
   isVerified?: boolean;
   isLinked?: boolean;
@@ -44,6 +44,7 @@ const UserSchema = new Schema({
   /* --------- 사용자 정보 ----- */
   name: String, // 사용자 이름
   description: { type: String, default: '안녕하세요' }, // 자기소개
+  phoneNumber: String, // 폰번호
   // 학회 활동 기간을 측정하기 위해서 가입, 종료 시점을 보여줌
   joined: Date,
   ended: Date,

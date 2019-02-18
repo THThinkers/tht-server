@@ -10,6 +10,7 @@ const userSchema = Joi.object().keys({
   name: Joi.string()
     .regex(/^[가-힣]{2,4}$/)
     .required(),
+  phoneNumber: Joi.string().required(),
   studentId: Joi.number()
     .min(0)
     .max(99)

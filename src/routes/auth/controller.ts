@@ -36,15 +36,9 @@ const logout = (req: Request, res: Response, next) => {
 };
 // 로컬 signup과 oauth signup 구분 필요
 const signup: RequestHandler = (req, res, next) => {
-  const { username, password, name, studentId, major, tags } = req.body;
   try {
     const user = new User({
-      username,
-      password,
-      name,
-      studentId,
-      major,
-      tags,
+      ...req.body,
       fillRequired: true,
     });
     user.save((err, savedUser) => {

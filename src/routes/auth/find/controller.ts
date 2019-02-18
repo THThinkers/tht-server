@@ -1,22 +1,52 @@
 import { RequestHandler } from 'express';
 import User from '../../../schema/User';
-const findUsername: RequestHandler = (req, res, next) => {
-  // 유저네임 찾기
-  return res.json({
-    username: '',
-  });
-};
+import { generateHash } from '../../../utils/crypt';
 
-const findPassword: RequestHandler = async (req, res, next) => {
-  const { username } = req.body;
+const findUsername: RequestHandler = async (req, res, next) => {
+  const { name, phoneNumber } = req.body;
   try {
-    const user = await User.findOne({}, 'username');
-    if (!user || !user.username) {
+    const user = await User.findOne({ name, phoneNumber }, 'username');
+    if (!user) {
       return res.json({
         isExist: false,
       });
     }
-    const newPassword = '1111'; // 해쉬값으로 수정
+    const at = user.username.indexOf('@');
+
+    const hashed = user.username.replace(/[a-z0-9]/gi, (char, i) => {
+      return i === 1 || i === at - 2 ? '*' : char;
+    });
+    // const hashed = user.username.replace(/[a-z]/gi, (char) => {
+    //   if (Math.random() > 0.5) {
+    //     return '*';
+    //   }
+    //   return char;
+    // });
+    return res.json({
+      username: hashed,
+    });
+  } catch (err) {
+    err.isOperational = true;
+  }
+};
+
+const findPassword: RequestHandler = async (req, res, next) => {
+  const { username, name, phoneNumber } = req.body;
+  try {
+    const user = await User.findOne(
+      { username, name, phoneNumber },
+      'username',
+    );
+    if (!user) {
+      return res.json({
+        isExist: false,
+      });
+    }
+    const newPassword = await generateHash(
+      Math.random()
+        .toString(36)
+        .slice(-8),
+    );
     await user.update({ password: newPassword });
     if (req.sgMail) {
       req.sgMail.send({
@@ -36,4 +66,4 @@ const findPassword: RequestHandler = async (req, res, next) => {
   }
 };
 
-export { findPassword };
+export { findUsername, findPassword };

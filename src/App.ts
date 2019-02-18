@@ -75,6 +75,11 @@ class App {
     this.app.use(sendgrid.init());
     // REST Api 라우팅
     this.app.use('/api', routes);
+
+    this.app.use((err, req, res, next) => {
+      console.log(chalk.red(`Server init error`));
+      console.error(err);
+    });
   }
 
   private async connectDB(dburl: string): Promise<void | Error> {
