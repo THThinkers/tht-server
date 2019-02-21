@@ -15,6 +15,27 @@ const getUsers: RequestHandler = async (req, res, next) => {
     next(err);
   }
 };
+const getUserProfile: RequestHandler = async (req, res, next) => {
+  try {
+    const { userId } = req.query;
+    const user = await User.findById(
+      userId,
+      'username name phoneNumber description major studentId isVerified',
+    );
+    if (!user) {
+      return res.json({
+        isExist: false,
+      });
+    }
+    return res.json({
+      user,
+      isExist: true,
+    });
+  } catch (err) {
+    err.isOperational = true;
+    next(err);
+  }
+};
 // toggle이 꼭 필요할까?
 const verifyUser: RequestHandler = async (req, res, next) => {
   try {
@@ -41,4 +62,21 @@ const verifyUser: RequestHandler = async (req, res, next) => {
     next(err);
   }
 };
-export { getUsers, verifyUser };
+const deleteUser: RequestHandler = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findByIdAndRemove(userId);
+    if (user) {
+      return res.json({
+        success: true,
+      });
+    }
+    return res.json({
+      success: false,
+    });
+  } catch (err) {
+    err.isOperational = true;
+    next(err);
+  }
+};
+export { getUsers, getUserProfile, verifyUser, deleteUser };
