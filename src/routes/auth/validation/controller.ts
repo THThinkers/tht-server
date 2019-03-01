@@ -4,10 +4,9 @@ import User from '../../../schema/User';
 const validateUsername: RequestHandler = async (req, res, next) => {
   try {
     const { username } = req.body;
-    const user = User.findOne({ username });
-    const isExist = user ? true : false;
+    const user = await User.findOne({ username });
     res.json({
-      isExist,
+      isExist: user ? true : false,
     });
   } catch (err) {
     next(err);
