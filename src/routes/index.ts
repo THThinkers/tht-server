@@ -2,12 +2,13 @@ import express from 'express';
 import admin from './admin';
 import auth from './auth';
 import column from './column';
+import tag from './tag';
 
-const route = express.Router();
+const router = express.Router();
 
-route.use('/admin', admin);
-route.use('/column', column);
-route.use('/auth', auth);
-// oauth도 나눌까 ..
+router.use('/admin', admin);
+router.use('/column', column);
+router.use('/auth', auth);
+router.use('/tag', tag);
 
-export default route;
+export default router;

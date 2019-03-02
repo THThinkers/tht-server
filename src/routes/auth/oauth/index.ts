@@ -2,6 +2,7 @@ import express from 'express';
 import passport from 'passport';
 
 import validator from '../../../middlewares/validator';
+import { addSignupTags } from '../middleware';
 import { userSchema } from '../schema';
 import * as controller from './controller';
 
@@ -29,7 +30,17 @@ router.get(
 router.get('/kakao', controller.oauthKakao);
 router.get('/callback/kakao', controller.callbackKakao);
 
-router.post('/signup', validator(userSchema), controller.oauthSignup);
-router.post('/link', validator(userSchema), controller.oauthLink);
+router.post(
+  '/signup',
+  validator(userSchema),
+  addSignupTags,
+  controller.oauthSignup,
+);
+router.post(
+  '/link',
+  validator(userSchema),
+  addSignupTags,
+  controller.oauthLink,
+);
 
 export default router;

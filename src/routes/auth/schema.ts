@@ -17,7 +17,12 @@ const userSchema = Joi.object().keys({
     .required(),
   major: Joi.string().required(),
   tags: Joi.array()
-    .items(Joi.string())
+    .items(
+      Joi.object().keys({
+        _id: Joi.string(),
+        name: Joi.string(),
+      }),
+    )
     .required(),
 });
 

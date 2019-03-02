@@ -10,6 +10,7 @@ import validationRoute from './validation';
 import validator from '../../middlewares/validator';
 import * as controller from './controller';
 import * as errorHandler from './error';
+import { addSignupTags } from './middleware';
 import { userSchema } from './schema';
 
 const router = express.Router();
@@ -30,7 +31,7 @@ router.post(
   passport.authenticate('local'),
   controller.login,
 );
-router.post('/signup', validator(userSchema), controller.signup);
+router.post('/signup', validator(userSchema), addSignupTags, controller.signup);
 router.get('/profile', controller.getProfile);
 router.get('/logout', controller.logout);
 

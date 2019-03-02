@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { Document, Model, Schema } from 'mongoose'; // typescript d.ts
-// model은 내부에서 this를 쓰기 떄문에 destructuring하면 binding이 안된다.
 import { checkPassword, generateHash } from '../utils/crypt';
+// model은 내부에서 this를 쓰기 떄문에 destructuring하면 binding이 안된다.
 // mongoose typescript 모델링
 // User 모델은 밖으로 뺴놔도 좋을듯?
 export interface IUser extends Document {
@@ -20,7 +20,7 @@ export interface IUser extends Document {
   ended: Date;
   major: string;
   studentId: number;
-  tags: [{}];
+  tags: Array<{ _id: string }>;
   createdAt: Date;
 }
 interface IUserDocument extends IUser {
@@ -70,11 +70,13 @@ const UserSchema = new Schema({
 UserSchema.pre('save', async function(this, next) {
   const user = this as IUser;
   try {
+    // 패스워드 암호화
     if (!user.password) {
       throw new Error('암호화활 패스워드가 없습니다.');
     }
     const hash = await generateHash(user.password);
     user.password = hash;
+    next();
   } catch (err) {
     err.isOperational = true;
     next(err);
