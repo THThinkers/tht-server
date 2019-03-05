@@ -8,6 +8,7 @@ export interface IUser extends Document {
   name?: string;
   username: string;
   password: string;
+  isActive?: boolean;
   isAdmin?: boolean;
   isVerified?: boolean;
   isLinked?: boolean;
@@ -42,6 +43,7 @@ const UserSchema = new Schema({
   profilePicture: String,
 
   /* --------- 사용자 정보 ----- */
+  isActive: { type: Boolean, default: false }, // 현재 활동중인지 여부
   name: String, // 사용자 이름
   description: { type: String, default: '안녕하세요' }, // 자기소개
   phoneNumber: String, // 폰번호

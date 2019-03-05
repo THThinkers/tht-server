@@ -5,7 +5,7 @@ const getUsers: RequestHandler = async (req, res, next) => {
   try {
     const users = await User.find(
       {},
-      'username name major studentId isAdmin isVerified',
+      'username name major studentId isAdmin isActive isVerified',
     );
     return res.json({
       users,
@@ -18,10 +18,7 @@ const getUsers: RequestHandler = async (req, res, next) => {
 const getUserProfile: RequestHandler = async (req, res, next) => {
   try {
     const { userId } = req.query;
-    const user = await User.findById(
-      userId,
-      'username name phoneNumber description major studentId isVerified',
-    );
+    const user = await User.findById(userId, '-password');
     if (!user) {
       return res.json({
         isExist: false,
@@ -79,4 +76,23 @@ const deleteUser: RequestHandler = async (req, res, next) => {
     next(err);
   }
 };
-export { getUsers, getUserProfile, verifyUser, deleteUser };
+const updateUser: RequestHandler = async (req, res, next) => {
+  try {
+    const { _id, ...updateFields } = req.body as Partial<IUser>;
+    const user = await User.findById(_id);
+    if (!user) {
+      return res.json({
+        isExist: false,
+      });
+    }
+    const newUser = Object.assign(user, updateFields);
+    const updatedUser = await newUser.save();
+    res.json({
+      user: updatedUser,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export { getUsers, getUserProfile, verifyUser, deleteUser, updateUser };
