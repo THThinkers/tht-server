@@ -3,6 +3,6 @@ import * as controller from './controller';
 
 const router = express.Router();
 
-router.get('/list', controller.getTags);
+router.get('/list', controller.getMajorList);
 
 export default router;

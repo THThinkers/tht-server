@@ -16,7 +16,7 @@ export interface IUser extends Document {
   googleId?: string;
   profilePicture?: string;
   description?: string;
-  joind: Date;
+  joined: Date;
   ended: Date;
   major: string;
   studentId: number;
@@ -48,7 +48,7 @@ const UserSchema = new Schema({
   // 학회 활동 기간을 측정하기 위해서 가입, 종료 시점을 보여줌
   joined: Date,
   ended: Date,
-  major: String, // 전공
+  major: { type: Schema.Types.ObjectId, ref: 'Major' }, // 전공
   studentId: { type: Number, min: 0, max: 99 }, // 학번년도
   /*
     사용자 선호 태그
