@@ -16,6 +16,7 @@ const userSchema = Joi.object().keys({
     .max(99)
     .required(),
   major: Joi.string().required(),
+  isActive: Joi.boolean().required(),
   tags: Joi.array()
     .items(
       Joi.object().keys({
