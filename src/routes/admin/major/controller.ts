@@ -15,11 +15,13 @@ const getMajorList: RequestHandler = async (req, res, next) => {
 const addMajor: RequestHandler = async (req, res, next) => {
   try {
     const { name } = req.body;
+    console.log(name);
     const major = new Major();
     major.name = name;
     const newMajor = await major.save();
     return res.json({
-      success: !!newMajor,
+      success: true,
+      payload: newMajor,
     });
   } catch (err) {
     next(err);
@@ -31,7 +33,8 @@ const updateMajor: RequestHandler = async (req, res, next) => {
     const { _id, ...updateFields } = req.body as IMajor;
     const major = await Major.findByIdAndUpdate(_id, updateFields);
     return res.json({
-      success: !!major,
+      success: true,
+      payload: major,
     });
   } catch (err) {
     next(err);
@@ -44,6 +47,7 @@ const deleteMajor: RequestHandler = async (req, res, next) => {
     await Major.deleteOne({ _id: majorId });
     res.json({
       success: true,
+      payload: majorId,
     });
   } catch (err) {
     next(err);
