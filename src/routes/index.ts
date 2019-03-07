@@ -5,7 +5,14 @@ import column from './column';
 import major from './major';
 import tag from './tag';
 
+import swaggerUi from 'swagger-ui-express';
+import swaggerDoc from './swaggers/index.json';
+
 const router = express.Router();
+
+// Swagger 설정.
+router.use('/', swaggerUi.serve);
+router.get('/', swaggerUi.setup(swaggerDoc));
 
 router.use('/admin', admin);
 router.use('/column', column);

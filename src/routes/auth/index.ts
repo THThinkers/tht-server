@@ -1,7 +1,5 @@
 import express from 'express';
 import passport from 'passport';
-import swaggerUi from 'swagger-ui-express';
-import swaggerDoc from './swagger.json';
 
 import findRoute from './find';
 import oauthRoute from './oauth';
@@ -14,11 +12,6 @@ import { addSignupTags } from './middleware';
 import { userSchema } from './schema';
 
 const router = express.Router();
-
-/* /api/auth/ */
-// Swagger 설정.
-router.use('/', swaggerUi.serve);
-router.get('/', swaggerUi.setup(swaggerDoc));
 
 // child 라우트 정리
 router.use('/validation', validationRoute);

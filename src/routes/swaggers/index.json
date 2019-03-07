@@ -1,0 +1,413 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "THThinker API",
+    "description": "THThinker의 웹사이트 api 문서",
+    "version": "0.0.1"
+  },
+  "servers": [{ "url": "http://localhost:4000/api", "description": "THT api" }],
+  "components": {
+    "schemas": {
+      "base": {
+        "properties": {
+          "success": { "type": "boolean" }
+        }
+      },
+      "exist": {
+        "properties": {
+          "isExist": { "type": "boolean" }
+        }
+      },
+      "user": {
+        "properties": {
+          "username": { "type": "string" },
+          "password": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "studentId": { "type": "number" },
+          "major": { "type": "string" },
+          "phoneNumber": { "type": "string" },
+          "tags": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/tag" }
+          },
+          "joined": { "type": "string" },
+          "ended": { "type": "string" },
+          "createdAt": { "type": "string" },
+          "kakaoId": { "type": "string" },
+          "googleId": { "type": "string" },
+          "isVerified": { "type": "boolean" },
+          "isLinked": { "type": "boolean" },
+          "isActive": { "type": "boolean" }
+        }
+      },
+      "signupUser": {
+        "properties": {
+          "username": { "type": "string" },
+          "password": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "studentId": { "type": "number" },
+          "major": { "type": "string" },
+          "phoneNumber": { "type": "string" },
+          "tags": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/tag" }
+          },
+          "joined": { "type": "string" },
+          "ended": { "type": "string" }
+        }
+      },
+      "loginUser": {
+        "properties": {
+          "username": { "type": "string" },
+          "password": { "type": "string" }
+        }
+      },
+      "linkUser": {
+        "$ref": "#/components/schemas/signupUser"
+      },
+      "findUsername": {
+        "properties": {
+          "name": { "type": "string" },
+          "phoneNumber": { "type": "string" }
+        }
+      },
+      "findPassword": {
+        "properties": {
+          "username": { "type": "string" },
+          "name": { "type": "string" },
+          "phoneNumber": { "type": "string" }
+        }
+      },
+      "major": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "name": { "type": "string" },
+          "createAt": { "type": "string" }
+        }
+      },
+      "majors": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/major"
+        }
+      },
+      "tag": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "name": { "type": "string" },
+          "createAt": { "type": "string" }
+        }
+      },
+      "tags": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/tag"
+        }
+      }
+    }
+  },
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "summary": "로그인",
+        "tags": ["auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/loginUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "로그인 완료",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/base"
+                }
+              }
+            }
+          },
+          "403": { "description": "로그인 실패" }
+        }
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "summary": "회원가입",
+        "tags": ["auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/signupUser"
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "회원가입 완료",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/base"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/profile": {
+      "get": {
+        "summary": "프로필 조회",
+        "tags": ["auth"],
+        "responses": {
+          "200": {
+            "description": "loggedIn",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "summary": "로그아웃",
+        "tags": ["auth"],
+        "responses": {
+          "200": {
+            "description": "loggedIn",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/base"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "로그아웃 실패"
+          }
+        }
+      }
+    },
+    "/auth/oauth/google": {
+      "get": {
+        "summary": "구글 로그인",
+        "tags": ["auth"],
+        "responses": {
+          "301": {
+            "description": "로그인 성공시 UI_SERVER로 redirect. 실패시 UI_SERVER/auth/check로 redirect"
+          },
+          "403": {
+            "description": "데이터베이스 에러"
+          }
+        }
+      }
+    },
+    "/auth/oauth/kakao": {
+      "get": {
+        "summary": "카카오 로그인",
+        "tags": ["auth"],
+        "responses": {
+          "301": {
+            "description": "로그인 성공시 UI_SERVER로 redirect. 실패시 UI_SERVER/auth/check로 redirect"
+          },
+          "403": {
+            "description": "데이터베이스 에러"
+          }
+        }
+      }
+    },
+    "/auth/oauth/link": {
+      "post": {
+        "summary": "Oauth 계정 연동",
+        "tags": ["auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/linkUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "기존 로컬 계정과 소셜 계정 연동 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/base"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "데이터베이스 에러"
+          }
+        }
+      }
+    },
+    "/auth/find/username": {
+      "post": {
+        "summary": "아이디 찾기",
+        "tags": ["auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/findUsername"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "성공적으로 찾기 완료. 가려진 아이디.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "username": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/find/password": {
+      "post": {
+        "summary": "비밀번호 찾기",
+        "tags": ["auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/findPassword"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "비밀번호 암호화 후 메일로 전송.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/exist"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/validation/username": {
+      "post": {
+        "summary": "Username 중복 여부 validation",
+        "tags": ["auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "중복 여부에 따라 isExist t/f",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "isExist": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "데이터베이스 에러"
+          }
+        }
+      }
+    },
+    "/tag/list": {
+      "get": {
+        "summary": "태그 리스트",
+        "tags": ["tag"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "description": "찾을 이름 (regex)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tags"
+                }
+              }
+            }
+          },
+          "403": { "description": "데이터베이스 에러" }
+        }
+      }
+    },
+    "/major/list": {
+      "get": {
+        "summary": "학과 리스트",
+        "tags": ["major"],
+        "responses": {
+          "200": {
+            "description": "학과 리스트",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/majors"
+                }
+              }
+            }
+          },
+          "403": { "description": "데이터베이스 에러" }
+        }
+      }
+    }
+  }
+}
