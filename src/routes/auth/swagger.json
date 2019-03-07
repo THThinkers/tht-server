@@ -8,6 +8,9 @@
   "servers": [
     { "url": "http://localhost:4000/api/auth", "description": "Auth API" }
   ],
+  "definitions": {
+    "$ref": "./swagger-definitions.json"
+  },
   "paths": {
     "/login": {
       "post": {
@@ -18,11 +21,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "username": { "type": "string" },
-                  "password": { "type": "string" }
-                }
+                "$ref": "#/definitions/loginUser"
               }
             }
           }
@@ -33,10 +32,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": { "type": "boolean" }
-                  }
+                  "$ref": "#/components/schemas/base"
                 }
               }
             }
@@ -54,17 +50,23 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "username": { "type": "string" },
-                  "password": { "type": "string" },
-                  "name": { "type": "string" }
-                }
+                "$ref": "#/components/schemas/signupUser"
               }
             }
           }
-        },
-        "responses": { "200": { "description": "회원가입 완료" } }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "회원가입 완료",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/base"
+              }
+            }
+          }
+        }
       }
     },
     "/profile": {
@@ -77,13 +79,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "user": {
-                      "type": "object",
-                      "description": "유저 정보"
-                    }
-                  }
+                  "$ref": "#/components/schemas/user"
                 }
               }
             }
@@ -97,7 +93,14 @@
         "tags": ["base"],
         "responses": {
           "200": {
-            "description": "로그아웃 성공"
+            "description": "loggedIn",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/base"
+                }
+              }
+            }
           },
           "403": {
             "description": "로그아웃 실패"

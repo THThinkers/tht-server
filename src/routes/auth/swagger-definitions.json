@@ -1,0 +1,74 @@
+{
+  "loginUser": {
+    "type": "object",
+    "properties": {
+      "username": { "type": "string" },
+      "password": { "type": "string" }
+    }
+  },
+  "schemas": {
+    "base": {
+      "properties": {
+        "success": { "type": "boolean" }
+      }
+    },
+    "exist": {
+      "properties": {
+        "isExist": { "type": "boolean" }
+      }
+    },
+    "tag": {
+      "properties": {
+        "_id": { "type": "string" },
+        "name": { "type": "string" },
+        "createAt": { "type": "string" }
+      }
+    },
+    "user": {
+      "properties": {
+        "username": { "type": "string" },
+        "password": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "studentId": { "type": "number" },
+        "major": { "type": "string" },
+        "phoneNumber": { "type": "string" },
+        "tags": {
+          "type": "array",
+          "items": { "$ref": "#/components/schemas/tag" }
+        },
+        "joined": { "type": "string" },
+        "ended": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "kakaoId": { "type": "string" },
+        "googleId": { "type": "string" },
+        "isVerified": { "type": "boolean" },
+        "isLinked": { "type": "boolean" },
+        "isActive": { "type": "boolean" }
+      }
+    },
+    "signupUser": {
+      "properties": {
+        "username": { "type": "string" },
+        "password": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "studentId": { "type": "number" },
+        "major": { "type": "string" },
+        "phoneNumber": { "type": "string" },
+        "tags": {
+          "type": "array",
+          "items": { "$ref": "#/components/schemas/tag" }
+        },
+        "joined": { "type": "string" },
+        "ended": { "type": "string" }
+      }
+    },
+    "loginUser": {
+      "properties": {
+        "username": { "type": "string" },
+        "password": { "type": "string" }
+      }
+    }
+  }
+}
