@@ -9,7 +9,7 @@ import validator from '../../middlewares/validator';
 import * as controller from './controller';
 import * as errorHandler from './error';
 import { addSignupTags } from './middleware';
-import { userSchema } from './schema';
+import { signinSchema, userSchema } from './schema';
 
 const router = express.Router();
 
@@ -20,7 +20,7 @@ router.use('/oauth', oauthRoute);
 
 router.post(
   '/login',
-  validator(userSchema),
+  validator(signinSchema),
   passport.authenticate('local'),
   controller.login,
 );

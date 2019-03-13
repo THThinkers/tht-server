@@ -8,7 +8,7 @@ const localStrategy = new LocalStrategy(
   async (username, password, done) => {
     const error: IError = new Error();
     try {
-      const user = await User.findOne({ username }, '_id username password');
+      const user = await User.findOne({ username });
       if (!user) {
         error.message = '잘못된 아이디 혹은 비밀번호.';
         error.isOperational = true;
@@ -20,7 +20,10 @@ const localStrategy = new LocalStrategy(
         error.isOperational = true;
         throw error;
       }
-      done(null, user);
+      const sensitiveUser = Object.assign(user, {
+        password: undefined,
+      });
+      done(null, sensitiveUser);
     } catch (err) {
       done(err);
     }

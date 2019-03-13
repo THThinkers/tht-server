@@ -1,5 +1,13 @@
 import Joi from 'joi';
 
+const signinSchema = Joi.object().keys({
+  username: Joi.string()
+    .email()
+    .required(),
+  password: Joi.string()
+    .regex(/^(?=.*[a-z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,15}$/)
+    .required(),
+});
 const userSchema = Joi.object().keys({
   username: Joi.string()
     .email()
@@ -13,10 +21,11 @@ const userSchema = Joi.object().keys({
   phoneNumber: Joi.string().required(),
   studentId: Joi.number()
     .min(0)
-    .max(99)
+    .max(9999)
     .required(),
   major: Joi.string().required(),
-  isActive: Joi.boolean().required(),
+  joined: Joi.string().required(),
+  ended: Joi.string().required(),
   tags: Joi.array()
     .items(
       Joi.object().keys({
@@ -27,4 +36,4 @@ const userSchema = Joi.object().keys({
     .required(),
 });
 
-export { userSchema };
+export { signinSchema, userSchema };

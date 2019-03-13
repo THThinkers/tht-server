@@ -16,6 +16,7 @@ const login: RequestHandler = (req, res, next) => {
   if (req.user) {
     return res.json({
       success: true,
+      user: req.user,
     });
   } else {
     // 아마 여기에 올일 없을거라 예상
