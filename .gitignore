@@ -9,3 +9,8 @@
 
 # 에디터 파일/폴더
 /.vscode
+
+/kubernetes
+
+Dockerfile
+.dockerignore

@@ -33,7 +33,8 @@ class App {
       await this.connectDB(dbUrl);
       // Start The App
       this.app.listen(
-        port,
+        port as number,
+        '0.0.0.0',
         (): void => {
           console.log(
             chalk.bgGreen(' SUCCESS ') +

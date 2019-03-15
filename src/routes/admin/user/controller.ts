@@ -6,7 +6,7 @@ const getUsers: RequestHandler = async (req, res, next) => {
     const users = await User.find(
       {},
       'username name major studentId isAdmin isActive isVerified',
-    );
+    ).populate('major');
     return res.json({
       users,
     });
@@ -18,7 +18,9 @@ const getUsers: RequestHandler = async (req, res, next) => {
 const getUserProfile: RequestHandler = async (req, res, next) => {
   try {
     const { userId } = req.query;
-    const user = await User.findById(userId, '-password');
+    const user = await User.findById(userId, '-password')
+      .populate('major')
+      .populate('tags');
     if (!user) {
       return res.json({
         isExist: false,

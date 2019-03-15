@@ -28,10 +28,10 @@ const userSchema = Joi.object().keys({
   ended: Joi.string().allow(''),
   tags: Joi.array()
     .items(
-      Joi.object().keys({
+      Joi.object({
         _id: Joi.string(),
         name: Joi.string(),
-      }),
+      }).unknown(true),
     )
     .required(),
 });
@@ -52,5 +52,6 @@ const linkSchema = signinSchema.keys({
       name: Joi.string(),
     }),
   ),
+  isNew: Joi.boolean(),
 });
 export { signinSchema, userSchema, linkSchema };

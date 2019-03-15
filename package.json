@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
-    "start": "cd src && nodemon --exec ts-node index.ts"
+    "start": "nodemon --watch src --exec ts-node src",
+    "start:js": "nodemon dist",
+    "start:prod": "npm run tsc && npm run start:js"
   },
   "repository": {
     "type": "git",
