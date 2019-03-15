@@ -10,16 +10,22 @@ const localStrategy = new LocalStrategy(
     try {
       const user = await User.findOne({ username });
       if (!user) {
-        error.message = '잘못된 아이디 혹은 비밀번호.';
+        error.message = '잘못된 아이디 혹은 비밀번호 입니다.';
         error.isOperational = true;
         throw error;
       }
       const isMatch = await user.comparePassword(password);
       if (!isMatch) {
-        error.message = '잘못된 아이디 혹은 비밀번호.';
+        error.message = '잘못된 아이디 혹은 비밀번호 입니다.';
         error.isOperational = true;
         throw error;
       }
+      // if (!user.isVerified) {
+      //   error.message =
+      //     '회원가입 승인이 안 되어 있어요. 학회장한테 문의하세요.';
+      //   error.isOperational = true;
+      //   throw error;
+      // }
       const sensitiveUser = Object.assign(user, {
         password: undefined,
       });

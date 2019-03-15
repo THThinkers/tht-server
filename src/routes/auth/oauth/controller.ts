@@ -136,25 +136,30 @@ const oauthSignup: RequestHandler = async (req, res, next) => {
 
 // 기존계정 또는 새로 만든 계정과 oauth 계정을 link
 const oauthLink: RequestHandler = async (req, res, next) => {
-  const { username, ...restInfo } = req.body; // kakaoId 또는 googleId 필수
+  const { username, isNew, ...restInfo } = req.body; // kakaoId 또는 googleId 필수
   try {
-    let existUser = await User.findOne({ username });
+    // 새로 계정을 만들었을 경우
+    if (isNew) {
+      const newUser = new User({ username, ...restInfo, isLinked: true });
+      await newUser.save();
+      return res.json({
+        success: true,
+      });
+    }
     // 기존계정에 연동하는 방법
+    let existUser = await User.findOne({ username });
     if (existUser) {
       existUser = Object.assign(existUser, restInfo as Partial<IUser>, {
         isLinked: true,
       });
       await existUser.save();
-      res.redirect(req.hostname);
       return res.json({
         success: true,
       });
     }
-    // 새로 계정을 만들었을 경우
-    const newUser = new User({ username, ...restInfo, isLinked: true });
-    await newUser.save();
+    // 뭣도아니면 false
     return res.json({
-      success: true,
+      success: false,
     });
   } catch (err) {
     err.isOperational = true;
