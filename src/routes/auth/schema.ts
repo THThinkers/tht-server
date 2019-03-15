@@ -34,6 +34,7 @@ const userSchema = Joi.object().keys({
       }).unknown(true),
     )
     .required(),
+  isNew: Joi.boolean(),
 });
 const linkSchema = signinSchema.keys({
   googleId: Joi.string(),
