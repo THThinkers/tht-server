@@ -48,10 +48,11 @@
           "name": { "type": "string" },
           "description": { "type": "string" },
           "studentId": { "type": "number" },
-          "major": { "type": "string" },
+          "major": { "type": "string", "description": "학과의 _id" },
           "phoneNumber": { "type": "string" },
           "tags": {
             "type": "array",
+            "description": "새로 만들 태그는 name만, 아니면 _id 포함",
             "items": { "$ref": "#/components/schemas/tag" }
           },
           "joined": { "type": "string" },
