@@ -47,10 +47,12 @@ const linkSchema = signinSchema.keys({
   joined: Joi.string(),
   ended: Joi.string(),
   tags: Joi.array().items(
-    Joi.object().keys({
-      _id: Joi.string(),
-      name: Joi.string(),
-    }),
+    Joi.object()
+      .keys({
+        _id: Joi.string(),
+        name: Joi.string(),
+      })
+      .unknown(true),
   ),
   isNew: Joi.boolean(),
 });
