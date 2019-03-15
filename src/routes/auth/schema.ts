@@ -25,7 +25,7 @@ const userSchema = Joi.object().keys({
     .required(),
   major: Joi.string().required(),
   joined: Joi.string().required(),
-  ended: Joi.string().required(),
+  ended: Joi.string().allow(''),
   tags: Joi.array()
     .items(
       Joi.object().keys({
