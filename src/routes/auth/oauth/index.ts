@@ -3,7 +3,7 @@ import passport from 'passport';
 
 import validator from '../../../middlewares/validator';
 import { addSignupTags } from '../middleware';
-import { userSchema } from '../schema';
+import { linkSchema, userSchema } from '../schema';
 import * as controller from './controller';
 
 const router = express.Router();
@@ -38,7 +38,7 @@ router.post(
 );
 router.post(
   '/link',
-  validator(userSchema),
+  validator(linkSchema),
   addSignupTags,
   controller.oauthLink,
 );

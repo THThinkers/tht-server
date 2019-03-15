@@ -35,5 +35,22 @@ const userSchema = Joi.object().keys({
     )
     .required(),
 });
-
-export { signinSchema, userSchema };
+const linkSchema = signinSchema.keys({
+  googleId: Joi.string(),
+  kakaoId: Joi.string(),
+  name: Joi.string().regex(/^[가-힣]{2,4}$/),
+  phoneNumber: Joi.string(),
+  studentId: Joi.number()
+    .min(0)
+    .max(9999),
+  major: Joi.string(),
+  joined: Joi.string(),
+  ended: Joi.string(),
+  tags: Joi.array().items(
+    Joi.object().keys({
+      _id: Joi.string(),
+      name: Joi.string(),
+    }),
+  ),
+});
+export { signinSchema, userSchema, linkSchema };

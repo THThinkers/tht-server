@@ -141,10 +141,11 @@ const oauthLink: RequestHandler = async (req, res, next) => {
     let existUser = await User.findOne({ username });
     // 기존계정에 연동하는 방법
     if (existUser) {
-      existUser = Object.assign({}, existUser, restInfo as Partial<IUser>, {
+      existUser = Object.assign(existUser, restInfo as Partial<IUser>, {
         isLinked: true,
       });
       await existUser.save();
+      res.redirect(req.hostname);
       return res.json({
         success: true,
       });
