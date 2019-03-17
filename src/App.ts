@@ -34,7 +34,6 @@ class App {
       // Start The App
       this.app.listen(
         port as number,
-        '0.0.0.0',
         (): void => {
           console.log(
             chalk.bgGreen(' SUCCESS ') +
