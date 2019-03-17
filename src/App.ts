@@ -12,6 +12,7 @@ import passport from './passport';
 import routes from './routes';
 import sendgrid from './utils/sendgrid';
 
+const RedisStore = new connectRedis(session);
 // Server Interface
 export interface IServerSettings {
   // Databaser Url
@@ -25,7 +26,7 @@ class App {
   public SessionStore =
     process.env.NODE_ENV === 'production'
       ? {
-          store: new connectRedis(session)({ host: 'localhost', port: '6379' }),
+          store: new RedisStore({ host: 'localhost', port: '6379' }),
         }
       : {};
   // 서버 실행하는 함수
