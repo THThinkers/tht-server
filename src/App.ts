@@ -1,5 +1,6 @@
 import bodyParser from 'body-parser';
 import chalk from 'chalk';
+import connectRedis from 'connect-redis';
 import cors from 'cors';
 import express, { Application } from 'express';
 import session from 'express-session';
@@ -21,7 +22,12 @@ export interface IServerSettings {
 
 class App {
   public app: Application = express();
-
+  public SessionStore =
+    process.env.NODE_ENV === 'production'
+      ? {
+          store: new connectRedis(session)({ host: 'localhost', port: '6379' }),
+        }
+      : {};
   // 서버 실행하는 함수
   public async start(settings: IServerSettings): Promise<void> {
     const { port, dbUrl } = settings;
@@ -63,6 +69,7 @@ class App {
     // express 에서 session 사용하기 위한 설정 - 세부 설정 필요.
     this.app.use(
       session({
+        ...this.SessionStore,
         resave: false,
         saveUninitialized: false,
         secret: process.env.SESSION_KEY!,
