@@ -32,7 +32,7 @@ export interface IUserModel extends Model<IUserDocument> {
 }
 
 const UserSchema = new Schema({
-  username: String, // id (email 형식)
+  username: { type: String, index: { unique: true } }, // id (email 형식)
   password: String,
   isAdmin: { type: Boolean, default: false }, // 학회장 권한 설정
   isVerified: { type: Boolean, default: false }, // 학회장 승인 받았는지 여부
