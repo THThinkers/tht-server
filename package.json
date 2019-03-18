@@ -8,7 +8,7 @@
     "start": "nodemon --watch src --exec ts-node src",
     "start:js": "nodemon dist",
     "start:prod": "npm run tsc && npm run start:js",
-    "start:pm2": "pm2 start ts-node -- -P ./tsconfig.json ./src/index.ts"
+    "start:pm2": "NODE_ENV=production pm2 start ts-node -- -P ./tsconfig.json ./src/index.ts"
   },
   "repository": {
     "type": "git",
