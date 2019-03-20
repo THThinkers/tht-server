@@ -3,6 +3,7 @@ import admin from './admin';
 import auth from './auth';
 import column from './column';
 import major from './major';
+import member from './member';
 import tag from './tag';
 
 import swaggerUi from 'swagger-ui-express';
@@ -18,6 +19,7 @@ router.use('/admin', admin);
 router.use('/column', column);
 router.use('/auth', auth);
 router.use('/major', major);
+router.use('/member', member);
 router.use('/tag', tag);
 
 export default router;
