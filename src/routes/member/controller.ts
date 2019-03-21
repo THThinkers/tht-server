@@ -8,9 +8,6 @@ const parseQuery = {
     query ? parseInt(query, 10) : undefined,
 };
 
-const getInteger = (query: string | undefined, base: number) =>
-  query ? parseInt(query, 10) : base;
-
 const getMemberList: RequestHandler = async (req, res, next) => {
   const { limit, offset, search, isActive } = req.query;
   try {
@@ -18,13 +15,20 @@ const getMemberList: RequestHandler = async (req, res, next) => {
       isActive: parseQuery.boolean(isActive),
       ...(search ? { name: search } : {}),
     };
+    Object.keys(query).forEach((field) =>
+      query[field] === undefined ? delete query[field] : null,
+    );
     const projection = '_id name major profilePicture studentId isActive';
-    const limitQuery = getInteger(limit, 10);
-    const offsetQuery = getInteger(offset, 0);
-    const members = await User.find(query, projection)
-      .limit(limitQuery)
-      .skip(offsetQuery)
-      .sort({ name: -1 });
+    const limitQuery = parseQuery.number(limit);
+    const offsetQuery = parseQuery.number(offset);
+    const execution = User.find(query, projection).populate('major');
+    if (limitQuery) {
+      execution.limit(limitQuery);
+    }
+    if (offsetQuery) {
+      execution.skip(offsetQuery);
+    }
+    const members = await execution.exec();
     return res.json({
       payload: members,
     });
