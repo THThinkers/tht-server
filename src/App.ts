@@ -10,6 +10,7 @@ import morgan from 'morgan';
 import uncaughtHandler from './handlers/uncaught';
 import passport from './passport';
 import routes from './routes';
+import lowDB from './utils/lowDB';
 import sendgrid from './utils/sendgrid';
 
 const RedisStore = new connectRedis(session);
@@ -38,6 +39,7 @@ class App {
       this.init();
       // DB connect
       await this.connectDB(dbUrl);
+      await lowDB.connect();
       // Start The App
       this.app.listen(
         port as number,

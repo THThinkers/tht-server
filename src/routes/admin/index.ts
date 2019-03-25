@@ -1,6 +1,7 @@
 import express from 'express';
 import * as controller from './controller';
 import errorHandler from './error';
+import imagebucketRoute from './imagebucket';
 import majorRoute from './major';
 import checkAdmin from './middlewares/checkAdmin';
 import userRoute from './user';
@@ -30,6 +31,7 @@ router.use(checkAdmin);
 
 router.use('/user', userRoute); // 회원관리 라우터
 router.use('/major', majorRoute); // 학과 관리 라우터
+router.use('/imagebucket', imagebucketRoute); // 이미지 관리 라우터
 
 router.use(errorHandler); // 에러 핸들링
 
