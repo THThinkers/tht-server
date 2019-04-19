@@ -1,6 +1,14 @@
 import { RequestHandler } from 'express';
 import User from '../../../schema/User';
-import { generateHash } from '../../../utils/crypt';
+
+const generateNewPassword = () => {
+  const special = '!@#_';
+  return (
+    Math.random()
+      .toString(36)
+      .slice(-8) + special.charAt(Math.floor(Math.random() * special.length))
+  );
+};
 
 const findUsername: RequestHandler = async (req, res, next) => {
   const { name, phoneNumber } = req.body;
@@ -42,12 +50,9 @@ const findPassword: RequestHandler = async (req, res, next) => {
         isExist: false,
       });
     }
-    const newPassword = await generateHash(
-      Math.random()
-        .toString(36)
-        .slice(-8),
-    );
-    await user.update({ password: newPassword });
+    const newPassword = generateNewPassword();
+    user.password = newPassword;
+    await user.save();
     if (req.sgMail) {
       req.sgMail.send({
         to: user.username,
